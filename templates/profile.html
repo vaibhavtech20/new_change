@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+{% load static %}
+{% csrf_token %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    {% load static %} 
+    <link rel="stylesheet" href="{% static '../static/css/style.css' %}">
+    <title>User Profiles</title>
+    <style>
+        .profile-box {
+            width: 300px;
+            height: 400px;
+            margin: auto;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #ccc;
+        }
+
+        .profile-details {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .other-profiles {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .other-profile {
+            width: 200px;
+            height: 300px;
+            border: 1px solid #ccc;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="home">Matrimony Site</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'home' %}">Home </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="create_profile">Create Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+        </ul>
+    </div>
+  </nav>
+<div class="profile-box" id="profileBox">
+    <!-- Profile Picture -->
+    {% for pro in MatrimonialProfiles %}
+    <img src="{{ pro.profile_pics }}"  class="img-fluid" alt="Profile Picture">
+    {% endfor %}
+    <!-- Profile Details -->
+    <div class="profile-details">
+        {% for pro in MatrimonialProfiles %}
+        <h4>{{ pro.name }}</h4>
+        <p>Age: {{ pro.calculate_age }}</p>
+        <p>Height: {{ pro.height }} inches</p>
+        <p>Location: {{ pro.city_living }}, {{ pro.state_living }}</p>
+        <p>Occupation: {{ pro.occupation }}</p>
+        {% endfor %}
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <button class="btn btn-primary">Send Interest</button>
+        <button class="btn btn-secondary">Shortlist</button>
+        <button class="btn btn-info">Chat</button>
+        <button class="btn btn-danger">Ignore</button>
+    </div>
+</div>
+
+<!-- Other Profiles -->
+<div class="other-profiles" id="otherProfiles">
+    <div class="other-profile" draggable="true"></div>
+    <div class="other-profile" draggable="true"></div>
+    <div class="other-profile" draggable="true"></div>
+    <!-- Add more profiles as needed -->
+</div>
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Draggable Functionality -->
+<script>
+    const profileBox = document.getElementById('profileBox');
+    const otherProfiles = document.getElementById('otherProfiles');
+
+    profileBox.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', 'profileBox');
+    });
+
+    otherProfiles.addEventListener('dragover', (e) => {
+        e.preventDefault();
+    });
+
+    otherProfiles.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const draggedElement = document.getElementById(e.dataTransfer.getData('text/plain'));
+        otherProfiles.appendChild(draggedElement);
+    });
+</script>
+
+</body>
+</html>

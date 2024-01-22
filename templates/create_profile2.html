@@ -1,0 +1,61 @@
+<!-- create_profile.html -->
+
+<!DOCTYPE html>
+{% load static %}
+{% csrf_token %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Matrimonial Profile</title>
+    <!-- Bootstrap CSS link (use the latest version) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    {% include 'navbar.html' %}
+    {% include 'messages.html' %}
+    {% csrf_token %}
+<div class="container mt-5">
+    <h2>Create Matrimonial Profile</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Section 1: Profile Pics -->
+        <div class="form-group">
+            <label for="id_profile_pics">Profile Pics</label>
+            {{ form.profile_pics }}
+        </div>
+
+        <!-- Section 2: Basic Details -->
+        <div class="card my-3">
+            <div class="card-header">2. Basic Details</div>
+            <div class="card-body">
+                <!-- Add form fields for basic details -->
+                {{ form.name }}
+                {{ form.gender }}
+                {{ form.height }}
+                {{ form.date_of_birth }}
+                {{ form.marital_status }}
+                {{ form.caste }}
+                {{ form.country_living }}
+                {{ form.state_living }}
+                {{ form.city_living }}
+            </div>
+        </div>
+
+        <!-- ... Repeat similar structure for other sections ... -->
+
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary">Create Profile</button>
+    </form>
+</div>
+
+<!-- Bootstrap JS and Popper.js (use the latest versions) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</body>
+{% include 'footer.html' %}
+</html>

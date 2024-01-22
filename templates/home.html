@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+{% load static %}
+{% csrf_token %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kunbi-Matrimony</title>
+    <!-- Link to Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Link to custom CSS (style.css) -->
+    
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+      <!-- Link add -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+      <style>
+        .image-slider-container {
+            overflow: hidden;
+        }
+
+        .image-slider {
+            display: flex;
+            animation: slideLeft 10s linear infinite;
+        }
+
+        .image-slider img {
+            width: 100%;
+            height: auto;
+        }
+
+        @keyframes slideLeft {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+    </style>
+
+</head>
+<body>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Matrimony Site</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="home">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="login">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- <div class="container center">
+	    <div class="row">
+	        <div class="col-md-12"> -->
+	            <!-- <h2>
+	                <span class="fa-stack fa-lg">
+	                   <i class="fa fa-square-o fa-stack-2x" aria-hidden="true"></i>
+	                    <a href="https://twitter.com/i/flow/login"><i class="fa fa-twitter fa-stack-1x" aria-hidden="true"></i></a>
+	                </span>
+	                <span class="fa-stack fa-lg">
+	                 <i class="fa fa-square-o fa-stack-2x" aria-hidden="true"></i>
+	                <a href="https://www.linkedin.com/checkpoint/rm/sign-in-another-account?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin"><i class="fa fa-linkedin-square fa-stack-1x" aria-hidden="true"></i></a>
+	                </span> -->
+	            <!-- </h2>
+	            <p>Waiting is not easy but just try it this time</p>
+	            <button class="btn btn-success btn-lg">
+	            {% comment %} <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i> {% endcomment %}
+              <a href="register"><i class="fa fa-spinner fa-spin fa-2x fa-fw" aria-hidden="true"></i></a>
+	            <br>Resister</button>
+	        </div>
+	    </div>
+	</div>     -->
+<section style="background-image: url('../static/images/pexels-d-m-12951710.jpg')" id="about" class="py-5 text-center">
+    <div style="color: white" class="container">
+        <p>Waiting is not easy but just try it this time</p>
+	            <button class="btn btn-success btn-lg">
+	            {% comment %} <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"></i> {% endcomment %}
+              <a href="register"><i class="fa fa-spinner fa-spin fa-2x fa-fw" aria-hidden="true"></i></a>
+	            <br>Resister</button>
+        </div>
+</section>
+
+<section>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="image-slider-container">
+                    <div class="image-slider">
+                        <!-- Add your images here -->
+                        <img src="../static/images/love-2587456_1920.jpg" alt="Image 1">
+                        <img src="../static/images/love-2587456_1920.jpg" alt="Image 2">
+                        <img src="../static/images/love-2587456_1920.jpg" alt="Image 3">
+                        <!-- Add more images as needed -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="image-slider-container">
+                    <div class="image-slider">
+                        <!-- Add your images here -->
+                        <img src="../static/images/love-2587456_1920.jpg" alt="Image 4">
+                        <img src="../static/images/love-2587456_1920.jpg" alt="Image 5">
+                        <img src="../static/images/love-2587456_1920.jpg" alt="Image 6">
+                        <!-- Add more images as needed -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div><p></p></div>
+<!-- no-repeat center center fixed -->
+<!-- Background image -->
+
+    <!-- Hero Section -->
+    <!-- <div class="hero-section text-center">
+        <h1>Welcome to Matrimony Site</h1>
+        <p>Find Your Perfect Match</p>
+        <a href="#" class="btn btn-primary btn-lg">Get Started</a>
+    </div> -->
+
+    <!-- About Us Section -->
+    <!-- <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>About Us</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eleifend est vitae mi dignissim, at mattis metus cursus.</p>
+            </div>
+            <div class="col-md-6">
+                <img src="{% static './images/placeholder-image.jpg'%}" alt="About Us Image" height="200em" >
+            </div>
+        </div>
+    </div> -->
+
+    <!-- Footer -->
+<!-- <div id="f1" style="position: absolute; bottom: 0px;width: 100%;">
+    <footer class="bg-dark text-light text-center py-3" >
+        &copy; 2023 Matrimony Site by Vaibhav Deshmukh
+    </footer>
+</div> -->
+    <!-- Link to Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+{% include 'footer.html' %}
+</html>

@@ -1,0 +1,66 @@
+.navbar-default .navbar-brand{
+    color: black;
+}
+
+body{
+    background: url(../images/pexels-d-m-12951710.jpg)
+    no-repeat center center fixed  ;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    font-family: catamaran;
+
+}
+
+.center{
+    text-align: center;
+    padding-top: 7%;
+}
+
+h1,p{
+    color: white;
+    
+}
+
+#login{
+    min-width: 250px;
+    background-color: rgba(255,255,255,0.7);
+    padding: 14px 14px 0;
+    overflow: hidden;
+}
+#login .social-button{
+    margin:12px 0;
+}
+
+.btn-fb{
+    color: #fff;
+    background-color: #3b599d;
+    margin-left: 6%;
+    margin-right: 15%;
+}
+.btn-li{
+    color: #fff;
+    background-color: #0077b5;
+    margin-left: 2%;
+}
+
+.fa-twitter{
+    color: white;
+    
+}
+
+.fa-linkedin-square{
+    color: white;
+}
+
+.fa-twitter:hover {
+    color: #00adb5;
+}
+
+.fa-linkedin-square:hover{
+     color: #00adb5;
+}
+
+.bg-dark text-light text-center py-3{
+    flex-shrink: 0;;
+}

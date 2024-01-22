@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <title>User Profile</title>
+</head>
+<body>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            {% for pro in MatrimonialProfiles %}
+            <!-- Profile Picture -->
+            <"{{pro.profile_pics}}" class="img-fluid rounded" alt="Profile Picture">
+        </div>
+        <div class="col-md-8">
+            <!-- User Details -->
+            <h2>{{ pro.name }}</h2>
+            <p>Age: </p>
+            <p>Height: {{ pro.height }} inches</p>
+            <p>Location: {{ pro.city_living }}, {{ pro.state_living }}</p>
+            <p>Occupation: {{ pro.occupation }}</p>
+            {% endfor %}
+            <!-- Action Tabs -->
+            <ul class="nav nav-tabs mt-4">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Send Interest</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Shortlist</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Chat</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Ignore</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>
