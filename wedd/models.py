@@ -23,10 +23,13 @@
 # models.py
 
 from django.db import models
+from django.conf import settings
 
 class MatrimonialProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # user = models.OneToOneField(User, on_delete=models.CASCADE)
     # Section 1: Profile Pics
-    profile_pics = models.ImageField(upload_to='../profile_pics/', null=True, blank=True)
+    profile_pics = models.ManyToManyField('YourImageModel', related_name='profile_pics')
 
     # Section 2: Basic Details
     name = models.CharField(max_length=100)
@@ -77,7 +80,7 @@ class MatrimonialProfile(models.Model):
     
 
     # Section 7: Contact Details
-    email_id = models.EmailField()
+    email = models.EmailField()
     phone_no = models.CharField(max_length=15)
 
     # Section 8: Lifestyle
@@ -90,7 +93,14 @@ class MatrimonialProfile(models.Model):
 
 
     def __str__(self):
-        return self.name
+        return str(self.user)
+
+class YourImageModel(models.Model):
+    image = models.ImageField(upload_to='profile_images/')
+    # You can add additional fields like description, date uploaded, etc.
+
+    def __str__(self):
+        return str(self.image)
 
 
     

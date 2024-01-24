@@ -21,6 +21,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.shortcuts import render
 from acc.models import CustomUser
+from .forms import MatrimonialProfileForm , ProfilePictureForm
 
 def register(request):
     if request.method == 'POST':
@@ -71,14 +72,78 @@ def logout(request):
     return redirect('login')
 
 
+# @login_required(login_url='login')
+# def profile(request):
+#     user = request.user
+#     user_profile_exists = MatrimonialProfile.objects.filter(user=user).exists()
+
+#     if user_profile_exists:
+#         MatrimonialProfiles = MatrimonialProfile.objects.all()
+#         data = {
+#             'MatrimonialProfiles': MatrimonialProfiles,
+#         }
+#         return render(request, 'profile.html', data)
+#     else:
+#         return redirect('create_profile')
+
 @login_required(login_url='login')
 def profile(request):
-    MatrimonialProfiles= MatrimonialProfile.objects.all()
-    data = {
-          'MatrimonialProfiles' : MatrimonialProfiles,
-    }
-    # return render(request, 'home.html',data)
-    return render(request,'profile.html',data)
+    user_profile_exists = MatrimonialProfile.objects.filter(user=request.user).exists()
+
+    if user_profile_exists:
+        MatrimonialProfiles = MatrimonialProfile.objects.all()
+        data = {
+            'MatrimonialProfiles': MatrimonialProfiles,
+        }
+        return render(request, 'profile.html', data)
+    else:
+        return redirect('create_profile')
+
+
+def create_profile(request):
+    if request.method == 'POST':
+        profile_form = MatrimonialProfileForm(request.POST)
+        picture_form = ProfilePictureForm(request.POST, request.FILES)
+
+        if profile_form.is_valid() and picture_form.is_valid():
+            profile = profile_form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+
+            picture = picture_form.save(commit=False)
+            picture.save()
+            
+            profile.profile_pics.add(picture)
+
+            return redirect('profile')  # Redirect to the profile page or any other page
+    else:
+        profile_form = MatrimonialProfileForm()
+        picture_form = ProfilePictureForm()
+
+    return render(request, 'create_profile.html', {'profile_form': profile_form, 'picture_form': picture_form})
+        
+# def create_profile(request):
+#     if request.method == 'POST':
+#         form = MatrimonialProfileForm(request.POST)
+#         if form.is_valid():
+#             profile = form.save(commit=False)
+#             profile.user = request.user
+#             profile.save()
+#             return redirect('profile')  # Redirect to a success page
+#     else:
+#         form = MatrimonialProfileForm()
+
+#     return render(request, 'create_profile.html', {'form': form})
+
+
+# @login_required(login_url='login')
+# def profile(request):
+#     MatrimonialProfiles= MatrimonialProfile.objects.all()
+#     data = {
+#           'MatrimonialProfiles' : MatrimonialProfiles,
+#     }
+#     # return render(request, 'home.html',data)
+#     return render(request,'profile.html',data)
 
 # views.py
 
@@ -122,18 +187,18 @@ def home(request):
 # views.py
 
 # from django.shortcuts import render, redirect
-from .forms import MatrimonialProfileForm
+# from .forms import MatrimonialProfileForm
 
-def create_profile(request):
-    if request.method == 'POST':
-        form = MatrimonialProfileForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')  # Redirect to a success page
-    else:
-        form = MatrimonialProfileForm()
+# def create_profile(request):
+#     if request.method == 'POST':
+#         form = MatrimonialProfileForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('profile')  # Redirect to a success page
+#     else:
+#         form = MatrimonialProfileForm()
 
-    return render(request, 'create_profile.html', {'form': form})
+#     return render(request, 'create_profile.html', {'form': form})
 
 
 

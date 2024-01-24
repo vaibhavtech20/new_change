@@ -45,7 +45,8 @@
 # forms.py
 
 from django import forms
-from .models import MatrimonialProfile
+# from extra_views import ClearableFileInput                  #this is after install django-extra-views
+from .models import MatrimonialProfile  
 from django.core.validators import FileExtensionValidator
 
 class MatrimonialProfileForm(forms.ModelForm):
@@ -111,7 +112,7 @@ class MatrimonialProfileForm(forms.ModelForm):
     family_based_city = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), max_length=50, required=True)
     maternal_uncles_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), max_length=100, required=True)
     # Contact Details
-    email_id = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}), required=True)
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}), required=True)
     phone_no = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), max_length=15, required=True)
 
     lifestyle = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}), required=False)
@@ -123,3 +124,17 @@ class MatrimonialProfileForm(forms.ModelForm):
         required=False,
         validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx'])]
     )
+
+
+class ProfilePictureForm(forms.ModelForm):
+    class Meta:
+        model = MatrimonialProfile
+        fields = ['profile_pics']
+        widgets = {
+            'profile_pics': forms.ClearableFileInput(attrs={'multiple': True}),
+        }
+# class ProfilePictureForm(forms.ModelForm):
+#     class Meta:
+#         model = YourImageModel
+#         fields = ['image']
+      

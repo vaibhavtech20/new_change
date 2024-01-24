@@ -56,7 +56,9 @@
         <h2 class="text-center mb-4">Wandekar Kumbi Matrimonial Profile</h2>
         <form method="post" enctype="multipart/form-data" action="{% url 'create_profile' %}">
           {% csrf_token %}
-          {{ form.as_p }}
+          <!-- {{ form.as_p }} -->
+          {{ profile_form.as_p }}
+          {{ picture_form.as_p }}
           <!-- <div class="form-group">
             <label for="profilePics">Upload Profile Pics</label>
             <input type="file" class="form-control-file" id="profilePics" name="profilePics">
@@ -277,6 +279,15 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- <script>
+    $(document).ready(function () {
+        // Add more file input fields on button click
+        $("#add-image").click(function () {
+            $("#id_image").clone().appendTo("#image-container");
+        });
+    });
+</script> -->
 </body>
 {% include 'footer.html' %}
 </html>
