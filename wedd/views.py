@@ -25,13 +25,13 @@ from acc.models import CustomUser
 def register(request):
     if request.method == 'POST':
         email = request.POST.get('email')
-        fullname = request.POST.get('fullname')
+        name = request.POST.get('name')
         password = request.POST.get('password')
         password1 = request.POST.get('password1')
 
         # Create a new user instance
         if password == password1:
-            user = CustomUser(email=email,fullname=fullname)
+            user = CustomUser(email=email,name=name)
             user.set_password(password)
             user.save()
             return redirect('login')

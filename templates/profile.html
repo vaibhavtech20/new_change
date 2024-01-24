@@ -70,6 +70,7 @@
     </div>
   </nav>
 <div class="profile-box" id="profileBox">
+    {% csrf_token %}
     <!-- Profile Picture -->
     {% for pro in MatrimonialProfiles %}
     <img src="{{ pro.profile_pics }}"  class="img-fluid" alt="Profile Picture">
