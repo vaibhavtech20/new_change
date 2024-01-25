@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    {% load static %} 
-    <link rel="stylesheet" href="{% static '../static/css/style.css' %}">
+    <!-- {% load static %} 
+    <link rel="stylesheet" href="{% static '../static/css/style.css' %}"> -->
     <title>User Profiles</title>
     <style>
         .profile-box {
@@ -72,17 +72,18 @@
 <div class="profile-box" id="profileBox">
     {% csrf_token %}
     <!-- Profile Picture -->
-    {% for pro in MatrimonialProfiles %}
-    <img src="{{ pro.profile_pics }}"  class="img-fluid" alt="Profile Picture">
+    {% for pic in ProfilePicture %}
+    <img src="{{ pic.profile_pics.url }}"  class="img-fluid" alt="Profile Picture">
     {% endfor %}
     <!-- Profile Details -->
     <div class="profile-details">
         {% for pro in MatrimonialProfiles %}
+        {{pro.user_id}}
         <h4>{{ pro.name }}</h4>
-        <p>Age: {{ pro.calculate_age }}</p>
+        <!-- <p>Age: {{ pro.calculate_age }}</p>
         <p>Height: {{ pro.height }} inches</p>
         <p>Location: {{ pro.city_living }}, {{ pro.state_living }}</p>
-        <p>Occupation: {{ pro.occupation }}</p>
+        <p>Occupation: {{ pro.occupation }}</p> -->
         {% endfor %}
     </div>
 

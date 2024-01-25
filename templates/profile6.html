@@ -1,0 +1,31 @@
+<!-- profile_detail.html -->
+
+
+
+    <h2>User Profile</h2>
+    
+    <!-- Display other profile information -->
+    {% for pro in MatrimonialProfiles %}
+    <p>Name: {{ pro.name }}</p>
+    <p>Email: {{ pro.user.email }}</p>
+    {% endfor %}
+    <!-- Add more fields as needed -->
+    <ul>
+        {% for image in MatrimonialProfiles %}
+            <li><img src="{{ image.profile_pics.url }}" alt="Uploaded Image"></li>
+        {% empty %}
+            <li>No images uploaded yet.</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Display profile picture(s) -->
+    <!-- <img src="{{ ProfilePicture.profile_pics.url }}" alt="Profile Picture"> -->
+    
+    <!-- {% if ProfilePicture.profile_pics %}
+        {% for pic in ProfilePicture %}
+            <img src="{{ profile_pics.url }}" alt="Profile Picture">
+        {% endfor %}
+    {% else %}
+        <p>No profile picture available.</p>
+    {% endif %} -->
+
