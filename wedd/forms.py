@@ -46,16 +46,19 @@
 
 from django import forms
 # from extra_views import ClearableFileInput                  #this is after install django-extra-views
-from .models import MatrimonialProfile  
+from .models import MatrimonialProfile,YourImageModel  
 from django.core.validators import FileExtensionValidator
+
+class TimePickerWidget(forms.TextInput):
+    input_type = 'time'
 
 class MatrimonialProfileForm(forms.ModelForm):
     class Meta:
         model = MatrimonialProfile
-        fields = '__all__'
+        fields = ['name','gender','height','date_of_birth','birth_time','birth_place','marital_status','caste','country_living','state_living','city_living','permanent_address','bio','profile_created_by','languages_spoken','disability','about_education','highest_education','pg_degree','pg_college','ug_degree','ug_college','school_name','about_career','employed_in','occupation','organization_name','about_family','father_occupation','mother_occupation','brothers','sisters','married_sisters','living_with_parents','family_based_city','maternal_uncles_name','email','phone_no','lifestyle','drinking_habits','smoking_habits','biodata']
         widgets = {
             'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
-            'birth_time': forms.TimeInput(attrs={'type': 'time'}),
+            # 'birth_time': forms.TimeInput(attrs={'type': 'time'}),
             # 'profile_pics': forms.ClearableFileInput(attrs={'multiple': True}),
         }
 
@@ -69,7 +72,8 @@ class MatrimonialProfileForm(forms.ModelForm):
     height = forms.DecimalField(widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter height'}), required=True)
 
     date_of_birth = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}), required=True)
-    birth_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control'}), required=True)
+    birth_time = forms.TimeField(widget=TimePickerWidget)
+    # birth_time = forms.TimeField(widget=forms.TimeInput(attrs={'class': 'form-control'}), required=True)
     birth_place = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter birth place'}), required=True)
     marital_status = forms.ChoiceField(choices=[('single', 'Single'), ('married', 'Married')], widget=forms.Select(attrs={'class': 'form-control'}), required=True)
     # caste = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), max_length=50, required=True)
@@ -126,15 +130,22 @@ class MatrimonialProfileForm(forms.ModelForm):
     )
 
 
-class ProfilePictureForm(forms.ModelForm):
-    class Meta:
-        model = MatrimonialProfile
-        fields = ['profile_pics']
-        widgets = {
-            'profile_pics': forms.ClearableFileInput(attrs={'multiple': True}),
-        }
 # class ProfilePictureForm(forms.ModelForm):
 #     class Meta:
-#         model = YourImageModel
-#         fields = ['image']
-      
+#         model = MatrimonialProfile
+#         fields = ['profile_pics']
+#         profile_pics = forms.ManyToManyField(widget=forms.ClearableFileInput(attrs={"allow_multiple_selected": True}), required=False)
+        # widget={'profile_pics': forms.ClearableFileInput(attrs={"allow_multiple_selected": True}), required=False}
+        # widgets = {
+        #     'profile_pics': forms.ClearableFileInput(attrs={'multiple': True}),
+        # }
+class ProfilePictureForm(forms.ModelForm):
+    class Meta:
+        model = YourImageModel
+        fields = ['image']
+        # image = forms.ImageField(widget=forms.ClearableFileInput(attrs={"allow_multiple_selected": True}), required=False)
+        clear_selection = forms.BooleanField(
+        required=False,
+        initial=True,
+        widget=forms.CheckboxInput(attrs={'onclick': 'clearFileInput()'})
+    )
