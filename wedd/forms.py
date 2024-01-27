@@ -46,7 +46,8 @@
 
 from django import forms
 # from extra_views import ClearableFileInput                  #this is after install django-extra-views
-from .models import MatrimonialProfile,YourImageModel  
+# from .models import MatrimonialProfile,YourImageModel  
+from .models import MatrimonialProfile
 from django.core.validators import FileExtensionValidator
 
 class TimePickerWidget(forms.TextInput):
@@ -55,14 +56,15 @@ class TimePickerWidget(forms.TextInput):
 class MatrimonialProfileForm(forms.ModelForm):
     class Meta:
         model = MatrimonialProfile
-        fields = ['name','gender','height','date_of_birth','birth_time','birth_place','marital_status','caste','country_living','state_living','city_living','permanent_address','bio','profile_created_by','languages_spoken','disability','about_education','highest_education','pg_degree','pg_college','ug_degree','ug_college','school_name','about_career','employed_in','occupation','organization_name','about_family','father_occupation','mother_occupation','brothers','sisters','married_sisters','living_with_parents','family_based_city','maternal_uncles_name','email','phone_no','lifestyle','drinking_habits','smoking_habits','biodata']
+        fields = '__all__'
+        # fields = ['name','gender','height','date_of_birth','birth_time','birth_place','marital_status','caste','country_living','state_living','city_living','permanent_address','bio','profile_created_by','languages_spoken','disability','about_education','highest_education','pg_degree','pg_college','ug_degree','ug_college','school_name','about_career','employed_in','occupation','organization_name','about_family','father_occupation','mother_occupation','brothers','sisters','married_sisters','living_with_parents','family_based_city','maternal_uncles_name','email','phone_no','lifestyle','drinking_habits','smoking_habits','biodata']
         widgets = {
             'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
             # 'birth_time': forms.TimeInput(attrs={'type': 'time'}),
-            # 'profile_pics': forms.ClearableFileInput(attrs={'multiple': True}),
+            # 'profile_image': forms.ClearableFileInput(attrs={"allow_multiple_selected": True}),
         }
 
-    # profilePics = forms.FileField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
+    profile_image = forms.FileField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
     
     # profile_pics = forms.FileField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file', 'multiple': True}))
     
@@ -122,12 +124,12 @@ class MatrimonialProfileForm(forms.ModelForm):
     lifestyle = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}), required=False)
     # drinking_habits = forms.BooleanField(widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}), required=False)
     # smoking_habits = forms.BooleanField(widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}), required=False)
-    # document = forms.FileField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}), required=False)
-    biodata = forms.FileField(
-        widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
-        required=False,
-        validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx'])]
-    )
+    biodata = forms.FileField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}), required=False)
+    # biodata = forms.FileField(
+    #     widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+    #     required=False,
+    #     validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx'])]
+    # )
 
 
 # class ProfilePictureForm(forms.ModelForm):
@@ -139,13 +141,9 @@ class MatrimonialProfileForm(forms.ModelForm):
         # widgets = {
         #     'profile_pics': forms.ClearableFileInput(attrs={'multiple': True}),
         # }
-class ProfilePictureForm(forms.ModelForm):
-    class Meta:
-        model = YourImageModel
-        fields = ['image']
+# class ProfilePictureForm(forms.ModelForm):
+#     class Meta:
+#         model = YourImageModel
+#         fields = ['image']
         # image = forms.ImageField(widget=forms.ClearableFileInput(attrs={"allow_multiple_selected": True}), required=False)
-        clear_selection = forms.BooleanField(
-        required=False,
-        initial=True,
-        widget=forms.CheckboxInput(attrs={'onclick': 'clearFileInput()'})
-    )
+    

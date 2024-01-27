@@ -26,10 +26,11 @@ from django.db import models
 from django.conf import settings
 
 class MatrimonialProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,null=True, blank=True, on_delete=models.CASCADE)
     # user = models.OneToOneField(User, on_delete=models.CASCADE)
     # Section 1: Profile Pics      related_name='profile_pics'   
-    profile_pics = models.ManyToManyField('YourImageModel', blank=True )
+    # profile_pics = models.ManyToManyField('YourImageModel', blank=True )
+    profile_image = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
 
     # Section 2: Basic Details
     name = models.CharField(max_length=100)
@@ -89,18 +90,18 @@ class MatrimonialProfile(models.Model):
     smoking_habits = models.BooleanField(default=False)
 
     # section 9 : Document upload
-    biodata = models.FileField(upload_to='../uploads/', null=True, blank=True)
+    biodata = models.FileField(upload_to='uploads/', null=True, blank=True)
 
 
     def __str__(self):
         return str(self.user)
 
-class YourImageModel(models.Model):
-    image = models.ImageField(upload_to='profile_pics/')
-    # You can add additional fields like description, date uploaded, etc.
+# class YourImageModel(models.Model):
+#     image = models.ImageField(upload_to='profile_pics/')
+#     # You can add additional fields like description, date uploaded, etc.
 
-    def __str__(self):
-        return str(self.image)
+#     def __str__(self):
+#         return str(self.image)
 
 
     

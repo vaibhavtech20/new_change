@@ -21,7 +21,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.shortcuts import render
 from acc.models import CustomUser
-from .forms import MatrimonialProfileForm , ProfilePictureForm
+# from .forms import MatrimonialProfileForm , ProfilePictureForm
+from .forms import MatrimonialProfileForm 
 
 def register(request):
     if request.method == 'POST':
@@ -103,24 +104,25 @@ def profile(request):
 def create_profile(request):
     if request.method == 'POST':
         profile_form = MatrimonialProfileForm(request.POST)
-        picture_form = ProfilePictureForm(request.POST, request.FILES)
-
-        if profile_form.is_valid() and picture_form.is_valid():
+        # picture_form = ProfilePictureForm(request.POST, request.FILES)
+        #  and picture_form.is_valid()
+        if profile_form.is_valid():
             profile = profile_form.save(commit=False)
             profile.user = request.user
             profile.save()
 
-            picture = picture_form.save(commit=False)
-            picture.save()
+            # picture = picture_form.save(commit=False)
+            # picture.save()
             
-            profile.profile_pics.add(picture)
+            # profile.profile_pics.add(picture)
 
             return redirect('profile')  # Redirect to the profile page or any other page
     else:
         profile_form = MatrimonialProfileForm()
-        picture_form = ProfilePictureForm()
+        # picture_form = ProfilePictureForm()
 
-    return render(request, 'create_profile.html', {'profile_form': profile_form, 'picture_form': picture_form})
+    return render(request, 'create_profile.html', {'profile_form': profile_form})
+    # , 'picture_form': picture_form
         
 # def create_profile(request):
 #     if request.method == 'POST':
