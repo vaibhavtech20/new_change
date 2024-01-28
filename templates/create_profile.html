@@ -56,8 +56,8 @@
         <h2 class="text-center mb-4">Wandekar Kumbi Matrimonial Profile</h2>
         <form method="post" enctype="multipart/form-data" action="{% url 'create_profile' %}">
           {% csrf_token %}
-          <!-- {{ form.as_p }} -->
-          {{ profile_form.as_p }}
+          {{ form.as_p }}
+          <!-- {{ profile_form.as_p }} -->
           <!-- {{ picture_form.as_p }} -->
           <!-- <div class="form-group">
             <label for="profilePics">Upload Profile Pics</label>

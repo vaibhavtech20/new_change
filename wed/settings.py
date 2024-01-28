@@ -147,7 +147,7 @@ SITE_URL = 'https://automatic-space-waffle-v9w5vgqpp4jhpv7p-8000.app.github.dev'
 import dj_database_url
 
 DATABASES = {
-    'default' : dj_database_url.parse('postgres://wandekarkunbi:RdjpV0hflJZgjNgTyfJA1cbNsUYrsm3T@dpg-cmqehla1hbls73fj7dtg-a.singapore-postgres.render.com/wandekarkunbi_98c8')
+    'default' : dj_database_url.parse('postgres://kunbipro:VBp9YOkE8okCkZPWjN5t535xBEvceOSL@dpg-cmqtbgn109ks73fenp0g-a.oregon-postgres.render.com/kunbipro')
  
 }
 

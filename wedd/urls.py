@@ -12,6 +12,8 @@ urlpatterns = [
     path('profile',views.profile, name='profile'),
     path('logout', views.logout, name="logout"),
     path('create_profile', views.create_profile, name='create_profile'),
+    path('update_profile', views.update_profile, name='update_profile'),
+    # path('profile/<int:profile_id>/', views.profile, name='profile'),
     
 
     # Password reset views

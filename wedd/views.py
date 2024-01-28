@@ -87,42 +87,107 @@ def logout(request):
 #     else:
 #         return redirect('create_profile')
 
+# @login_required(login_url='login')
+# def profile(request):
+#     user_profile_exists = MatrimonialProfile.objects.filter(email=request.user.email).exists()
+
+#     if user_profile_exists:
+#         MatrimonialProfiles = MatrimonialProfile.objects.all()
+#         data = {
+#             'MatrimonialProfiles': MatrimonialProfiles,
+#         }
+#         return render(request, 'profile.html',  data)
+#     else:
+#         return redirect('create_profile')
+
+# @login_required(login_url='login')
+# def profile(request):
+#     # यहां हम request.user.profile का उपयोग करके उपयोगकर्ता की प्रोफ़ाइल की जानकारी प्राप्त कर रहे हैं।
+#     user_profile = request.user.email
+
+#     # प्रोफ़ाइल मौजूद है या नहीं यह जाँचें
+#     if user_profile:
+#         MatrimonialProfiles = MatrimonialProfile.objects.all()
+#         data = {
+#             'user_profile': user_profile,
+#             'MatrimonialProfiles': MatrimonialProfiles,
+#         }
+#         return render(request, 'profile.html', data)
+#     else:
+#         # प्रोफ़ाइल नहीं है, तो प्रोफ़ाइल बनाने के लिए पेज पर पुनर्निर्देशित करें
+#         return redirect('create_profile')
+
 @login_required(login_url='login')
 def profile(request):
-    user_profile_exists = MatrimonialProfile.objects.filter(user=request.user).exists()
-
-    if user_profile_exists:
-        MatrimonialProfiles = MatrimonialProfile.objects.all()
-        data = {
-            'MatrimonialProfiles': MatrimonialProfiles,
-        }
-        return render(request, 'profile.html', data)
-    else:
+    try:
+        user_profile = MatrimonialProfile.objects.get(email=request.user.email)
+    except MatrimonialProfile.DoesNotExist:
+        # If the profile doesn't exist, redirect to the profile creation page or handle it as per your requirements
         return redirect('create_profile')
 
+    other_profiles = MatrimonialProfile.objects.exclude(email=request.user.email)
+    
+    context = {
+        'user_profile': user_profile,
+        'other_profiles': other_profiles,
+    }
 
+    return render(request, 'profile.html', context)
+
+@login_required(login_url='login')
 def create_profile(request):
     if request.method == 'POST':
-        profile_form = MatrimonialProfileForm(request.POST)
-        # picture_form = ProfilePictureForm(request.POST, request.FILES)
-        #  and picture_form.is_valid()
-        if profile_form.is_valid():
-            profile = profile_form.save(commit=False)
-            profile.user = request.user
-            profile.save()
-
-            # picture = picture_form.save(commit=False)
-            # picture.save()
-            
-            # profile.profile_pics.add(picture)
-
-            return redirect('profile')  # Redirect to the profile page or any other page
+        form = MatrimonialProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')  # Replace 'profile_list' with the URL pattern for listing profiles
     else:
-        profile_form = MatrimonialProfileForm()
-        # picture_form = ProfilePictureForm()
+        form = MatrimonialProfileForm()
+    
+    return render(request, 'create_profile.html', {'form': form})
 
-    return render(request, 'create_profile.html', {'profile_form': profile_form})
-    # , 'picture_form': picture_form
+@login_required(login_url='login')
+def update_profile(request):
+    user_profile = MatrimonialProfile.objects.get(email=request.user.email)
+
+    if request.method == 'POST':
+        form = MatrimonialProfileForm(request.POST, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('user_profile')  # Redirect to the user's profile page after successful update
+    else:
+        form = MatrimonialProfileForm(instance=user_profile)
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'update_profile.html', context)
+
+
+
+# def create_profile(request):
+#     if request.method == 'POST':
+#         profile_form = MatrimonialProfileForm(request.POST)
+#         # picture_form = ProfilePictureForm(request.POST, request.FILES)
+#         #  and picture_form.is_valid()
+#         if profile_form.is_valid():
+#             profile = profile_form.save(commit=False)
+#             profile.user = request.user
+#             profile.save()
+
+#             # picture = picture_form.save(commit=False)
+#             # picture.save()
+            
+#             # profile.profile_pics.add(picture)
+
+#             return redirect('profile')  # Redirect to the profile page or any other page
+#     else:
+#         profile_form = MatrimonialProfileForm()
+#         # picture_form = ProfilePictureForm()
+
+#     return render(request, 'create_profile.html', {'profile_form': profile_form})
+#     # , 'picture_form': picture_form
         
 # def create_profile(request):
 #     if request.method == 'POST':

@@ -24,15 +24,19 @@
 
 from django.db import models
 from django.conf import settings
+from acc.models import CustomUserManager , CustomUser
 
 class MatrimonialProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,null=True, blank=True, on_delete=models.CASCADE)
+    # user = models.OneToOneField(settings.AUTH_USER_MODEL,null=True, blank=True, on_delete=models.CASCADE)
     # user = models.OneToOneField(User, on_delete=models.CASCADE)
     # Section 1: Profile Pics      related_name='profile_pics'   
     # profile_pics = models.ManyToManyField('YourImageModel', blank=True )
-    profile_image = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
-
+    # id= models.AutoField(primary_key=True,unique=True,editable=False,serialize=False,auto_created=True,db_column='id',db_index=True,db_tablespace=None,default=None,blank=False,null=False,unique_for_date=None,unique_for_month=None,unique_for_year=None,choices=None,validators=[],error_messages=None)
+    
+    # profile_image = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+    objects = CustomUserManager()
     # Section 2: Basic Details
+    profile_pic = models.ImageField(upload_to='profile_pics/')
     name = models.CharField(max_length=100)
     gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female')])
     height = models.FloatField() 
@@ -81,7 +85,7 @@ class MatrimonialProfile(models.Model):
     
 
     # Section 7: Contact Details
-    email = models.EmailField()
+    email = models.EmailField(primary_key=True,unique=True ,blank=False,null=False)
     phone_no = models.CharField(max_length=15)
 
     # Section 8: Lifestyle
@@ -94,7 +98,7 @@ class MatrimonialProfile(models.Model):
 
 
     def __str__(self):
-        return str(self.user)
+        return str(self.name)
 
 # class YourImageModel(models.Model):
 #     image = models.ImageField(upload_to='profile_pics/')

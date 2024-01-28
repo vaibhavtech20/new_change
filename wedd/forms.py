@@ -56,15 +56,20 @@ class TimePickerWidget(forms.TextInput):
 class MatrimonialProfileForm(forms.ModelForm):
     class Meta:
         model = MatrimonialProfile
-        fields = '__all__'
+        # fields = '__all__'
+        fields =['profile_pic','name', 'gender','height','date_of_birth','birth_time','birth_place', 'marital_status','caste','country_living','state_living','city_living','permanent_address','bio','profile_created_by','languages_spoken','disability','about_education','highest_education','pg_degree','pg_college','ug_degree','ug_college','school_name','about_career','employed_in','occupation','organization_name','about_family','father_occupation','mother_occupation','brothers','sisters','married_sisters','living_with_parents','family_based_city','maternal_uncles_name', 'email', 'phone_no','lifestyle','drinking_habits','smoking_habits','biodata']
         # fields = ['name','gender','height','date_of_birth','birth_time','birth_place','marital_status','caste','country_living','state_living','city_living','permanent_address','bio','profile_created_by','languages_spoken','disability','about_education','highest_education','pg_degree','pg_college','ug_degree','ug_college','school_name','about_career','employed_in','occupation','organization_name','about_family','father_occupation','mother_occupation','brothers','sisters','married_sisters','living_with_parents','family_based_city','maternal_uncles_name','email','phone_no','lifestyle','drinking_habits','smoking_habits','biodata']
         widgets = {
+            'profile_pic': forms.ClearableFileInput(attrs={'accept': 'image/*'}),
             'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+            'birth_time': forms.TimeInput(attrs={'type': 'time'}),
+            'biodata': forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx'}),
+            # 'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
             # 'birth_time': forms.TimeInput(attrs={'type': 'time'}),
             # 'profile_image': forms.ClearableFileInput(attrs={"allow_multiple_selected": True}),
         }
-
-    profile_image = forms.FileField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
+    # profile_image = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
+    # profile_image = forms.FileField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
     
     # profile_pics = forms.FileField(widget=forms.ClearableFileInput(attrs={'class': 'form-control-file', 'multiple': True}))
     
