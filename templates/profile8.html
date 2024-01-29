@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+{% load static %}
+{% csrf_token %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <!-- Add Bootstrap CSS link -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f8f9fa;
+        }
+        .profile-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .user-profile {
+            width: 30%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .other-profiles {
+            width: 65%;
+        }
+        .profile-card {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="home">Matrimony Site</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'home' %}">Home </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'update_profile' %}">Update Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+        </ul>
+    </div>
+  </nav>
+    <div class="container">
+        <div class="profile-container">
+            <!-- User's Own Profile -->
+            <div class="user-profile">
+                <h2>Your Profile</h2>
+                
+                <img src="{{user_profile.profile_pic.url }}" alt="Your Profile Image" class="img-fluid mb-3">
+                <p>Name: {{ user_profile.name}}</p>
+                <p>Date of Birth: {{user_profile.date_of_birth }}</p>
+                <!-- Add more profile details as needed -->
+
+                <!-- Update Profile Button -->
+                <a href="{% url 'update_profile' %}" class="btn btn-primary">Update Profile</a>
+            </div>
+
+            <!-- Other User Profiles -->
+            <div class="other-profiles">
+                <h2>Other Profiles</h2>
+                {% for profile in other_profiles %}
+                    <div class="profile-card">
+                        <p>Name: {{ profile.name }}</p>
+                        <p>Email: {{ profile.email }}</p>
+
+                        <img src="{{ profile.profile_pic.url }}" alt="{{ profile.name }} Image" class="img-fluid mb-3">
+                        <p>Name: {{ profile.name }}</p>
+                        <p>Date of Birth: {{ profile.date_of_birth }}</p>
+                        <!-- Add more profile details as needed -->
+                    </div>
+                {% endfor %}
+                <div class="action-buttons">
+                    <button onclick="sendInteraction('interest')">Send Interest</button>
+                    <button onclick="sendInteraction('shortlist')">Shortlist</button>
+                    <button onclick="sendInteraction('chat')">Chat</button>
+                    <button onclick="sendInteraction('ignore')">Ignore</button>
+                </div>
+
+                
+                <li>
+                    <strong><a href="#">{{ profile.name }}</a></strong><br>
+                    Age: {{ profile.age }}<br>
+                    Occupation: {{ profile.occupation }}<br>
+                    <!-- Add other fields as needed -->
+                </li>
+            </div>
+            <h2>Other Profiles</h2>
+
+            <ul>
+              {% for profile in other_profiles %}
+                <li>
+                  <strong><a href="{% url 'profile_detail' %}">Profile Detail</a></strong><br>
+                  Age: {{ profile.age }}<br>
+                  Occupation: {{ profile.occupation }}<br>
+                  <!-- Add other fields as needed -->
+                </li>
+              {% endfor %}
+            </ul>        
+        </div>
+    </div>
+
+    <!-- Add Bootstrap JS and Popper.js scripts (optional) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.8/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Draggable Functionality -->
+<script>
+    const profileBox = document.getElementById('profileBox');
+    const otherProfiles = document.getElementById('otherProfiles');
+
+    profileBox.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', 'profileBox');
+    });
+
+    otherProfiles.addEventListener('dragover', (e) => {
+        e.preventDefault();
+    });
+
+    otherProfiles.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const draggedElement = document.getElementById(e.dataTransfer.getData('text/plain'));
+        otherProfiles.appendChild(draggedElement);
+    });
+</script>
+
+</body>
+</html>

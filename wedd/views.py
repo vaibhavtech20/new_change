@@ -267,7 +267,51 @@ def home(request):
 
 #     return render(request, 'create_profile.html', {'form': form})
 
+# from django.shortcuts import render, get_object_or_404
+# def profile_detail(request, profile_id):
+#     profile = get_object_or_404(MatrimonialProfile, pk=profile_id)
+#     return render(request, 'profile_detail.html', {'profile': profile})
+# @login_required(login_url='login')
+# def profile_detail(request):
+#     # try:
+#     #     user_profile = MatrimonialProfile.objects.get(email=request.user.email)
+#     # except MatrimonialProfile.DoesNotExist:
+#     #     # If the profile doesn't exist, redirect to the profile creation page or handle it as per your requirements
+#     #     return redirect('create_profile')
 
+#     other_profiles = MatrimonialProfile.objects.exclude(email=request.user.email)
+    
+#     context = {
+#         # 'user_profile': user_profile,
+#         'other_profiles': other_profiles,
+#     }
 
+#     return render(request, 'profile_detail.html', context)
 
+# views.py
+
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+
+from .models import MatrimonialProfile, Interaction
+
+def send_interaction(request, action, receiver_id):
+    sender_profile = get_object_or_404(MatrimonialProfile, user=request.user)
+    receiver_profile = get_object_or_404(MatrimonialProfile, id=receiver_id)
+
+    # Check if the interaction already exists
+    existing_interaction = Interaction.objects.filter(sender=sender_profile, receiver=receiver_profile, action=action).exists()
+
+    if not existing_interaction:
+        Interaction.objects.create(sender=sender_profile, receiver=receiver_profile, action=action)
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'already_exists'})
+
+def profile_detail(request, MatrimonialProfile_id):
+    # Retrieve profile details and interactions for the current user
+    profile = get_object_or_404(MatrimonialProfile, id=MatrimonialProfile_id)
+    interactions = Interaction.objects.filter(sender=request.user.profile, receiver=profile)
+
+    return render(request, 'profile_detail.html', {'profile': profile, 'interactions': interactions})
 

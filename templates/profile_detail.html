@@ -1,0 +1,43 @@
+<!-- templates/wedding/profile_detail.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ profile.name }}'s Profile</title>
+</head>
+<body>
+
+<h1>{{ profile.name }}'s Profile</h1>
+
+<p>
+    Age: {{ profile.age }}<br>
+    Occupation: {{ profile.occupation }}<br>
+    <!-- Add other fields as needed -->
+</p>
+
+<a href="{% url 'profile' %}">Back to Profiles</a>
+
+<h1>{{ profile.user.username }}</h1>
+
+<button onclick="sendInteraction('interest')">Send Interest</button>
+<button onclick="sendInteraction('shortlist')">Shortlist</button>
+<button onclick="sendInteraction('chat')">Chat</button>
+<button onclick="sendInteraction('ignore')">Ignore</button>
+
+<script>
+    function sendInteraction(action) {
+        var profileId = {{ profile.id }};
+        fetch(`/send_interaction/${action}/${profileId}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(`${action} sent successfully!`);
+                } else if (data.status === 'already_exists') {
+                    alert(`You have already sent ${action} to this profile.`);
+                }
+            });
+    }
+</script>
+
+</body>
+</html>

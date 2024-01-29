@@ -13,6 +13,7 @@ urlpatterns = [
     path('logout', views.logout, name="logout"),
     path('create_profile', views.create_profile, name='create_profile'),
     path('update_profile', views.update_profile, name='update_profile'),
+    path('profile_detail', views.profile_detail, name='profile_detail'),
     # path('profile/<int:profile_id>/', views.profile, name='profile'),
     
 
