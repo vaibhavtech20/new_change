@@ -95,57 +95,47 @@
         <button class="btn btn-primary">Send Interest</button>
         <button class="btn btn-secondary">Shortlist</button>
         <button class="btn btn-info">Chat</button>
-        <!-- <button class="btn btn-danger">Ignore</button> -->
+   
     </div>
                     </div>
                 {% endfor %}
+     <!-- ... (pichhla code) ... -->
 
+{% for profile in other_profiles %}
+<div class="profile-card">
+    <p>Name: {{ profile.name }}</p>
+    <p>Email: {{ profile.email }}</p>
 
-                
-                <!-- <li>
-                    <strong><a href="#">{{ profile.name }}</a></strong><br>
-                    Age: {{ profile.age }}<br>
-                    Occupation: {{ profile.occupation }}<br> -->
-                    <!-- Add other fields as needed -->
-                <!-- </li>
-            </div>
-            <h2>Other Profiles</h2>
+    <img src="{{ profile.profile_pic.url }}" alt="{{ profile.name }} Image" class="img-fluid mb-3">
+    <p>Name: {{ profile.name }}</p>
+    <p>Date of Birth: {{ profile.date_of_birth }}</p>
+    <!-- More profile details as needed -->
 
-            <ul>
-              {% for profile in other_profiles %}
-                <li>
-                  <strong><a href="#">Profile Detail</a></strong><br>
-                  Age: {{ profile.age }}<br>
-                  Occupation: {{ profile.occupation }}<br> -->
-                  <!-- Add other fields as needed -->
-                <!-- </li>
-              {% endfor %}
-            </ul>         -->
-        </div>
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <form method="post" action="{% url 'send_interest' receiver_id=profile.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Send Interest</button>
+        </form>
+        
+        <form method="post" action="{% url 'shortlist' profile_id=profile.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary">Shortlist</button>
+        </form>
+
+        <a href="{% url 'chat' receiver_id=profile.id %}" class="btn btn-info">Chat</a>
     </div>
+</div>
+{% endfor %}
+
+<!-- ... (baki ka code) ... -->
+
 
     <!-- Add Bootstrap JS and Popper.js scripts (optional) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.8/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- Draggable Functionality -->
-<!-- <script>
-    const profileBox = document.getElementById('profileBox');
-    const otherProfiles = document.getElementById('otherProfiles');
 
-    profileBox.addEventListener('dragstart', (e) => {
-        e.dataTransfer.setData('text/plain', 'profileBox');
-    });
 
-    otherProfiles.addEventListener('dragover', (e) => {
-        e.preventDefault();
-    });
-
-    otherProfiles.addEventListener('drop', (e) => {
-        e.preventDefault();
-        const draggedElement = document.getElementById(e.dataTransfer.getData('text/plain'));
-        otherProfiles.appendChild(draggedElement);
-    });
-</script> -->
 </body>
 </html>

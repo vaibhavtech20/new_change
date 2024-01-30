@@ -23,6 +23,7 @@ from django.shortcuts import render
 from acc.models import CustomUser
 # from .forms import MatrimonialProfileForm , ProfilePictureForm
 from .forms import MatrimonialProfileForm 
+from django.db.models import Q
 
 def register(request):
     if request.method == 'POST':
@@ -320,10 +321,10 @@ def home(request):
 # views.py
 
 from django.shortcuts import render, redirect
-from features.models import MatrimonialProfile, Interest
+from features.models import Interest,Message,Shortlist
 
 def send_interest(request, receiver_id):
-    sender_profile = MatrimonialProfile.objects.get(id=request.user.id)
+    sender_profile = MatrimonialProfile.objects.get(email=request.user.email)
     # receiver_profile = MatrimonialProfile.objects.exclude(id=request.user.id)
     
     receiver_profile = MatrimonialProfile.objects.exclude(id=request.user.id).get(id=receiver_id)
@@ -339,7 +340,7 @@ def send_interest(request, receiver_id):
 def chat(request, receiver_id):
     # sender_profile = MatrimonialProfile.objects.get(user=request.user)
     # receiver_profile = MatrimonialProfile.objects.get(id=receiver_id)
-    sender_profile = MatrimonialProfile.objects.get(id=request.user.id)
+    sender_profile = MatrimonialProfile.objects.get(email=request.user.email)
     
     receiver_profile = MatrimonialProfile.objects.exclude(id=request.user.id).get(id=receiver_id)
 
@@ -359,9 +360,9 @@ def chat(request, receiver_id):
 def shortlist(request, profile_id):
     # user_profile = MatrimonialProfile.objects.get(user=request.user)
     # profile_to_shortlist = MatrimonialProfile.objects.get(id=profile_id)
-    sender_profile = MatrimonialProfile.objects.get(id=request.user.id)
+    user_profile = MatrimonialProfile.objects.get(email=request.user.email)
     
-    receiver_profile = MatrimonialProfile.objects.exclude(id=request.user.id).get(id=receiver_id)
+    profile_to_shortlist = MatrimonialProfile.objects.exclude(id=request.user.id).get(id=profile_id)
 
     # Check if the profile is not already shortlisted
     existing_shortlist = Shortlist.objects.filter(user=user_profile, profile=profile_to_shortlist)
@@ -374,15 +375,16 @@ def shortlist(request, profile_id):
 @login_required
 def profile_detail(request, receiver_id):
     # Get the receiver's profile
-    receiver_profile = get_object_or_404(MatrimonialProfile, id=request.receiver.id)
+    # receiver_profile = get_object_or_404(MatrimonialProfile, id=request.receiver.id)
+    receiver_profile = MatrimonialProfile.objects.exclude(id=request.user.id).get(id=receiver_id)
 
     # Check if the receiver is the logged-in user
-    is_self_profile = request.user == receiver_profile.user
+    is_self_profile = request.user.email == receiver_profile.email
 
     # Check if the sender has already sent interest
     sender_has_sent_interest = False
     if not is_self_profile:
-        sender_profile = MatrimonialProfile.objects.get(user=request.user)
+        sender_profile = MatrimonialProfile.objects.get(email=request.user.email)
         sender_has_sent_interest = receiver_profile.received_interests.filter(sender=sender_profile).exists()
 
     context = {
