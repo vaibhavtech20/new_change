@@ -1,0 +1,28 @@
+<!-- chat.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+</head>
+<body>
+    <h1>Chat with {{ receiver_id }}</h1>
+
+    <!-- Display Chat Messages -->
+    <div>
+        {% for message in messages %}
+            <p>{{ message.sender.user.username }}: {{ message.content }}</p>
+        {% endfor %}
+    </div>
+
+    <!-- Message Form -->
+    <form method="post" action="">
+        {% csrf_token %}
+        <textarea name="content" placeholder="Type your message"></textarea>
+        <button type="submit">Send</button>
+    </form>
+</body>
+</html>

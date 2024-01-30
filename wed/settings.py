@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'acc',
+    'features',
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media/')

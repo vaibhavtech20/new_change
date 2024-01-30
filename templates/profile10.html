@@ -90,35 +90,37 @@
                         <p>Name: {{ profile.name }}</p>
                         <p>Date of Birth: {{ profile.date_of_birth }}</p>
                         <!-- Add more profile details as needed -->
+                        <!-- Action Buttons -->
+    <div class="action-buttons">
+        <button class="btn btn-primary">Send Interest</button>
+        <button class="btn btn-secondary">Shortlist</button>
+        <button class="btn btn-info">Chat</button>
+        <!-- <button class="btn btn-danger">Ignore</button> -->
+    </div>
                     </div>
                 {% endfor %}
-                <div class="action-buttons">
-                    <button onclick="sendInteraction('interest')">Send Interest</button>
-                    <button onclick="sendInteraction('shortlist')">Shortlist</button>
-                    <button onclick="sendInteraction('chat')">Chat</button>
-                    <button onclick="sendInteraction('ignore')">Ignore</button>
-                </div>
+
 
                 
-                <li>
+                <!-- <li>
                     <strong><a href="#">{{ profile.name }}</a></strong><br>
                     Age: {{ profile.age }}<br>
-                    Occupation: {{ profile.occupation }}<br>
+                    Occupation: {{ profile.occupation }}<br> -->
                     <!-- Add other fields as needed -->
-                </li>
+                <!-- </li>
             </div>
             <h2>Other Profiles</h2>
 
             <ul>
               {% for profile in other_profiles %}
                 <li>
-                  <strong><a href="{% url 'profile_detail' %}">Profile Detail</a></strong><br>
+                  <strong><a href="#">Profile Detail</a></strong><br>
                   Age: {{ profile.age }}<br>
-                  Occupation: {{ profile.occupation }}<br>
+                  Occupation: {{ profile.occupation }}<br> -->
                   <!-- Add other fields as needed -->
-                </li>
+                <!-- </li>
               {% endfor %}
-            </ul>        
+            </ul>         -->
         </div>
     </div>
 
@@ -127,7 +129,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.8/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- Draggable Functionality -->
-<script>
+<!-- <script>
     const profileBox = document.getElementById('profileBox');
     const otherProfiles = document.getElementById('otherProfiles');
 
@@ -144,7 +146,6 @@
         const draggedElement = document.getElementById(e.dataTransfer.getData('text/plain'));
         otherProfiles.appendChild(draggedElement);
     });
-</script>
-
+</script> -->
 </body>
 </html>

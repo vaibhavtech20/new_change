@@ -232,6 +232,7 @@ def update_profile(request):
 
 # def profile(request):
 
+
 #     user = request.user
 #     # Retrieve logged-in user's profile
 #     user_profile = MatrimonialProfile.objects.get(user=user)
@@ -290,28 +291,104 @@ def home(request):
 
 # views.py
 
-from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
+# from django.shortcuts import get_object_or_404
+# from django.http import JsonResponse
 
-from .models import MatrimonialProfile, Interaction
+# from .models import MatrimonialProfile, Interaction
 
-def send_interaction(request, action, receiver_id):
-    sender_profile = get_object_or_404(MatrimonialProfile, user=request.user)
-    receiver_profile = get_object_or_404(MatrimonialProfile, id=receiver_id)
+# def send_interaction(request, action, receiver_id):
+#     sender_profile = get_object_or_404(MatrimonialProfile, user=request.user)
+#     receiver_profile = get_object_or_404(MatrimonialProfile, id=receiver_id)
 
-    # Check if the interaction already exists
-    existing_interaction = Interaction.objects.filter(sender=sender_profile, receiver=receiver_profile, action=action).exists()
+#     # Check if the interaction already exists
+#     existing_interaction = Interaction.objects.filter(sender=sender_profile, receiver=receiver_profile, action=action).exists()
 
-    if not existing_interaction:
-        Interaction.objects.create(sender=sender_profile, receiver=receiver_profile, action=action)
-        return JsonResponse({'status': 'success'})
-    else:
-        return JsonResponse({'status': 'already_exists'})
+#     if not existing_interaction:
+#         Interaction.objects.create(sender=sender_profile, receiver=receiver_profile, action=action)
+#         return JsonResponse({'status': 'success'})
+#     else:
+#         return JsonResponse({'status': 'already_exists'})
 
-def profile_detail(request, MatrimonialProfile_id):
-    # Retrieve profile details and interactions for the current user
-    profile = get_object_or_404(MatrimonialProfile, id=MatrimonialProfile_id)
-    interactions = Interaction.objects.filter(sender=request.user.profile, receiver=profile)
+# def profile_detail(request, MatrimonialProfile_id):
+#     # Retrieve profile details and interactions for the current user
+#     profile = get_object_or_404(MatrimonialProfile, id=MatrimonialProfile_id)
+#     interactions = Interaction.objects.filter(sender=request.user.profile, receiver=profile)
 
-    return render(request, 'profile_detail.html', {'profile': profile, 'interactions': interactions})
+#     return render(request, 'profile_detail.html', {'profile': profile, 'interactions': interactions})
 
+# Features app 
+# views.py
+
+from django.shortcuts import render, redirect
+from features.models import MatrimonialProfile, Interest
+
+def send_interest(request, receiver_id):
+    sender_profile = MatrimonialProfile.objects.get(id=request.user.id)
+    # receiver_profile = MatrimonialProfile.objects.exclude(id=request.user.id)
+    
+    receiver_profile = MatrimonialProfile.objects.exclude(id=request.user.id).get(id=receiver_id)
+    # Check if the interest is not already sent
+    existing_interest = Interest.objects.filter(sender=sender_profile, receiver=receiver_profile)
+    if not existing_interest.exists():
+        Interest.objects.create(sender=sender_profile, receiver=receiver_profile)
+    
+    return redirect('profile_detail', receiver_id=receiver_id)
+
+# views.py
+
+def chat(request, receiver_id):
+    # sender_profile = MatrimonialProfile.objects.get(user=request.user)
+    # receiver_profile = MatrimonialProfile.objects.get(id=receiver_id)
+    sender_profile = MatrimonialProfile.objects.get(id=request.user.id)
+    
+    receiver_profile = MatrimonialProfile.objects.exclude(id=request.user.id).get(id=receiver_id)
+
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        Message.objects.create(sender=sender_profile, receiver=receiver_profile, content=content)
+    
+    messages = Message.objects.filter(
+        (Q(sender=sender_profile, receiver=receiver_profile) | Q(sender=receiver_profile, receiver=sender_profile))
+    ).order_by('timestamp')
+
+    return render(request, 'chat.html', {'messages': messages, 'receiver_id': receiver_id})
+
+
+# views.py
+
+def shortlist(request, profile_id):
+    # user_profile = MatrimonialProfile.objects.get(user=request.user)
+    # profile_to_shortlist = MatrimonialProfile.objects.get(id=profile_id)
+    sender_profile = MatrimonialProfile.objects.get(id=request.user.id)
+    
+    receiver_profile = MatrimonialProfile.objects.exclude(id=request.user.id).get(id=receiver_id)
+
+    # Check if the profile is not already shortlisted
+    existing_shortlist = Shortlist.objects.filter(user=user_profile, profile=profile_to_shortlist)
+    if not existing_shortlist.exists():
+        Shortlist.objects.create(user=user_profile, profile=profile_to_shortlist)
+    
+    return redirect('profile_detail', profile_id=profile_id)
+
+
+@login_required
+def profile_detail(request, receiver_id):
+    # Get the receiver's profile
+    receiver_profile = get_object_or_404(MatrimonialProfile, id=request.receiver.id)
+
+    # Check if the receiver is the logged-in user
+    is_self_profile = request.user == receiver_profile.user
+
+    # Check if the sender has already sent interest
+    sender_has_sent_interest = False
+    if not is_self_profile:
+        sender_profile = MatrimonialProfile.objects.get(user=request.user)
+        sender_has_sent_interest = receiver_profile.received_interests.filter(sender=sender_profile).exists()
+
+    context = {
+        'receiver_profile': receiver_profile,
+        'is_self_profile': is_self_profile,
+        'sender_has_sent_interest': sender_has_sent_interest,
+    }
+
+    return render(request, 'profile_detail.html', context)

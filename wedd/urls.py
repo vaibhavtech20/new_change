@@ -3,7 +3,12 @@ from .views import login
 from .import views
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
-
+from .views import (
+    send_interest,
+    chat,
+    shortlist,
+    profile_detail,
+)
 urlpatterns = [
     path('',views.home,name='home'),
     path('home',views.home,name='home'),
@@ -13,7 +18,7 @@ urlpatterns = [
     path('logout', views.logout, name="logout"),
     path('create_profile', views.create_profile, name='create_profile'),
     path('update_profile', views.update_profile, name='update_profile'),
-    path('profile_detail', views.profile_detail, name='profile_detail'),
+    # path('profile_detail', views.profile_detail, name='profile_detail'),
     # path('profile/<int:profile_id>/', views.profile, name='profile'),
     
 
@@ -25,7 +30,10 @@ urlpatterns = [
     path('reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
     
-
+    path('profile/<int:receiver_id>/', profile_detail, name='profile_detail'),
+    path('send_interest/<int:receiver_id>/', send_interest, name='send_interest'),
+    path('chat/<int:receiver_id>/', chat, name='chat'),
+    path('shortlist/<int:profile_id>/', shortlist, name='shortlist'),
 
     # old 
     # path('password_change/done/',auth_views.PasswordChangeDoneView.as_view(template_name='password_reset/password_change_done.html'),name='password_change_done'),

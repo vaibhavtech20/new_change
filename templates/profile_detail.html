@@ -1,43 +1,34 @@
-<!-- templates/wedding/profile_detail.html -->
-
+<!-- profile_detail.html -->
+{% load static %}
+{% csrf_token %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>{{ profile.name }}'s Profile</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile Detail</title>
 </head>
 <body>
+    <h1>User Profile Detail</h1>
+    
+    <!-- Display User Profile Information -->
+    <p>Username: {{ receiver_profile.user.username }}</p>
+    <!-- Display other profile fields as needed -->
 
-<h1>{{ profile.name }}'s Profile</h1>
+    <!-- Send Interest Button -->
+    <form method="post" action="{% url 'send_interest' receiver_id=receiver_profile.id %}">
+        {% csrf_token %}
+        <button type="submit">Send Interest</button>
+    </form>
 
-<p>
-    Age: {{ profile.age }}<br>
-    Occupation: {{ profile.occupation }}<br>
-    <!-- Add other fields as needed -->
-</p>
+    <!-- Shortlist Button -->
+    <form method="post" action="{% url 'shortlist' profile_id=receiver_profile.id %}">
+        {% csrf_token %}
+        <button type="submit">Shortlist</button>
+    </form>
 
-<a href="{% url 'profile' %}">Back to Profiles</a>
-
-<h1>{{ profile.user.username }}</h1>
-
-<button onclick="sendInteraction('interest')">Send Interest</button>
-<button onclick="sendInteraction('shortlist')">Shortlist</button>
-<button onclick="sendInteraction('chat')">Chat</button>
-<button onclick="sendInteraction('ignore')">Ignore</button>
-
-<script>
-    function sendInteraction(action) {
-        var profileId = {{ profile.id }};
-        fetch(`/send_interaction/${action}/${profileId}/`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    alert(`${action} sent successfully!`);
-                } else if (data.status === 'already_exists') {
-                    alert(`You have already sent ${action} to this profile.`);
-                }
-            });
-    }
-</script>
-
+    <!-- Chat Button -->
+    <a href="{% url 'chat' receiver_id=receiver_profile.id %}">Start Chat</a>
 </body>
 </html>
