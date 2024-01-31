@@ -89,10 +89,24 @@
                         <img src="{{ profile.profile_pic.url }}" alt="{{ profile.name }} Image" class="img-fluid mb-3">
                         <p>Name: {{ profile.name }}</p>
                         <p>Date of Birth: {{ profile.date_of_birth }}</p>
+
+                        <div class="action-buttons">
+                            <form method="post" action="{% url 'send_interest' receiver_id=profile.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Send Interest</button>
+                            </form>
+                            
+                            <form method="post" action="{% url 'shortlist' profile_id=profile.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-secondary">Shortlist</button>
+                            </form>
+                    
+                            <a href="{% url 'chat' receiver_id=profile.id %}" class="btn btn-info">Chat</a>
+                        </div>
                         <!-- Add more profile details as needed -->
                         <!-- Action Buttons -->
     <!-- Action Buttons -->
-    <div class="action-buttons">
+    <!-- <div class="action-buttons">
         <form method="post" action="{% url 'send_interest' receiver_id=profile.id %}">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary">Send Interest</button>
@@ -105,7 +119,7 @@
 
         <a href="{% url 'chat' receiver_id=profile.id %}" class="btn btn-info">Chat</a>
     </div>
-</div>
+</div> -->
                     </div>
                 {% endfor %}
 

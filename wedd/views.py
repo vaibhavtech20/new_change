@@ -362,7 +362,7 @@ def shortlist(request, profile_id):
     # profile_to_shortlist = MatrimonialProfile.objects.get(id=profile_id)
     user_profile = MatrimonialProfile.objects.get(email=request.user.email)
     
-    profile_to_shortlist = MatrimonialProfile.objects.exclude(id=request.user.id).get(id=profile_id)
+    profile_to_shortlist = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=profile_id)
 
     # Check if the profile is not already shortlisted
     existing_shortlist = Shortlist.objects.filter(user=user_profile, profile=profile_to_shortlist)
