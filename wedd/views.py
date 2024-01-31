@@ -327,7 +327,7 @@ def send_interest(request, receiver_id):
     sender_profile = MatrimonialProfile.objects.get(email=request.user.email)
     # receiver_profile = MatrimonialProfile.objects.exclude(id=request.user.id)
     
-    receiver_profile = MatrimonialProfile.objects.exclude(id=request.user.id).get(id=receiver_id)
+    receiver_profile = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=receiver_id)
     # Check if the interest is not already sent
     existing_interest = Interest.objects.filter(sender=sender_profile, receiver=receiver_profile)
     if not existing_interest.exists():
@@ -342,7 +342,7 @@ def chat(request, receiver_id):
     # receiver_profile = MatrimonialProfile.objects.get(id=receiver_id)
     sender_profile = MatrimonialProfile.objects.get(email=request.user.email)
     
-    receiver_profile = MatrimonialProfile.objects.exclude(id=request.user.id).get(id=receiver_id)
+    receiver_profile = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=receiver_id)
 
     if request.method == 'POST':
         content = request.POST.get('content')
@@ -376,7 +376,7 @@ def shortlist(request, profile_id):
 def profile_detail(request, receiver_id):
     # Get the receiver's profile
     # receiver_profile = get_object_or_404(MatrimonialProfile, id=request.receiver.id)
-    receiver_profile = MatrimonialProfile.objects.exclude(id=request.user.id).get(id=receiver_id)
+    receiver_profile = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=receiver_id)
 
     # Check if the receiver is the logged-in user
     is_self_profile = request.user.email == receiver_profile.email
