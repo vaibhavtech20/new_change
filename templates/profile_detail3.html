@@ -1,0 +1,71 @@
+<!-- profile_detail.html -->
+{% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile Detail</title>
+</head>
+<body>
+    <!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="home">Matrimony Site</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'home' %}">Home </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'update_profile' %}">Update Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            </li>
+             <!-- Notifications Dropdown -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Notifications
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% for notification in notifications %}
+                        <a class="dropdown-item" href="#">{{ notification.content }}</a>
+                    {% endfor %}
+                </div>
+            </li>
+        </ul>
+    </div>
+  </nav>
+    <h1>User Profile Detail</h1>
+    
+    <!-- Display User Profile Information -->
+    <p>Username: {{ receiver_profile.user.username }}</p>
+    <!-- Display other profile fields as needed -->
+    {% load static %}
+    {% csrf_token %}
+    <!-- Send Interest Button -->
+    <div>
+    <form method="post" action="{% url 'send_interest' receiver_id=receiver_profile.id %}">
+        {% csrf_token %}
+        <button type="submit">Send Interest</button>
+    </form>
+
+    <!-- Shortlist Button -->
+    <form method="post" action="{% url 'shortlist' profile_id=receiver_profile.id %}">
+        {% csrf_token %}
+        <button type="submit">Shortlist</button>
+    </form>
+
+    <!-- Chat Button -->
+    <a href="{% url 'chat' receiver_id=receiver_profile.id %}">Start Chat</a>
+</div>
+</body>
+</html>

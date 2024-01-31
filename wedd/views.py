@@ -372,6 +372,15 @@ def shortlist(request, profile_id):
     return redirect('profile_detail', profile_id=profile_id)
 
 
+#notification
+from django.shortcuts import get_object_or_404
+from features.models import Notification
+
+def create_notification(user, content):
+    Notification.objects.create(user=user, content=content)
+
+
+
 @login_required
 def profile_detail(request, receiver_id):
     # Get the receiver's profile

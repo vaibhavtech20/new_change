@@ -23,3 +23,9 @@ class Shortlist(models.Model):
     profile = models.ForeignKey(MatrimonialProfile, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+class Notification(models.Model):
+    user = models.ForeignKey(MatrimonialProfile, on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+

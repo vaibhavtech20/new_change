@@ -60,6 +60,17 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'logout' %}">Logout</a>
             </li>
+             <!-- Notifications Dropdown -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Notifications
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% for notification in notifications %}
+                        <a class="dropdown-item" href="#">{{ notification.content }}</a>
+                    {% endfor %}
+                </div>
+            </li>
         </ul>
     </div>
   </nav>
@@ -90,7 +101,23 @@
                         <p>Name: {{ profile.name }}</p>
                         <p>Date of Birth: {{ profile.date_of_birth }}</p>
 
+                        
                         <div class="action-buttons">
+                            <form method="post" action="{% url 'send_interest' receiver_id=profile.id %}" class="d-inline-block">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Send Interest</button>
+                            </form>
+                        
+                            <form method="post" action="{% url 'shortlist' profile_id=profile.id %}" class="d-inline-block">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-secondary">Shortlist</button>
+                            </form>
+                        
+                            <a href="{% url 'chat' receiver_id=profile.id %}" class="btn btn-info d-inline-block">Chat</a>
+                        </div>
+                        
+
+                        <!-- <div class="action-buttons">
                             <form method="post" action="{% url 'send_interest' receiver_id=profile.id %}">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-primary">Send Interest</button>
@@ -102,7 +129,7 @@
                             </form>
                     
                             <a href="{% url 'chat' receiver_id=profile.id %}" class="btn btn-info">Chat</a>
-                        </div>
+                        </div> -->
                         <!-- Add more profile details as needed -->
                         <!-- Action Buttons -->
     <!-- Action Buttons -->
