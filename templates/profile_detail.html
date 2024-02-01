@@ -51,6 +51,7 @@
                     <!-- Action buttons -->
                     {% if not is_self_profile %}
                         <div class="action-buttons">
+                            {% csrf_token %}
                             <form method="post" action="{% url 'send_interest' receiver_id=receiver_profile.id %}" class="d-inline-block">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-primary">Send Interest</button>

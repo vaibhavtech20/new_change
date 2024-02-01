@@ -103,6 +103,7 @@
 
                         
                         <div class="action-buttons">
+                            {% csrf_token %}
                             <form method="post" action="{% url 'send_interest' receiver_id=profile.id %}" class="d-inline-block">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-primary">Send Interest</button>
