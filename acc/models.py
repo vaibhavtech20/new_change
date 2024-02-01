@@ -3,6 +3,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.contrib.auth.models import PermissionsMixin
+from wedd.models import MatrimonialProfile
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, name, password=None, **extra_fields):
@@ -26,6 +27,9 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
+
+    matrimonialprofile = models.OneToOneField(MatrimonialProfile, on_delete=models.CASCADE, null=True, blank=True)
+    
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'

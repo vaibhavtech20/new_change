@@ -25,11 +25,11 @@
 from django.db import models
 from django.db.models import BigAutoField
 from django.conf import settings
-from acc.models import CustomUserManager , CustomUser
+# from acc.models import CustomUserManager 
 
 class MatrimonialProfile(models.Model):
     id = BigAutoField(primary_key=True)
-    objects = CustomUserManager()
+    # objects = CustomUserManager()
     # Section 2: Basic Details
     profile_pic = models.ImageField(upload_to='profile_pics/')
     name = models.CharField(max_length=100)

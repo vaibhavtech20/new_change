@@ -20,7 +20,7 @@ urlpatterns = [
     path('update_profile', views.update_profile, name='update_profile'),
     # path('profile_detail', views.profile_detail, name='profile_detail'),
     # path('profile/<int:profile_id>/', views.profile, name='profile'),
-    
+    path('dashboard', views.dashboard, name='dashboard'),
 
     # Password reset views
     path('password_reset/', PasswordResetView.as_view(), name='password_reset'),

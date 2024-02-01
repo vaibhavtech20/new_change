@@ -1,0 +1,66 @@
+<!-- dashboard/templates/dashboard/dashboard.html -->
+
+<body>
+    {% csrf_token %}
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="home">Matrimony Site</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'home' %}">Home </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'dashboard' %}">dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                </li>
+                 <!-- Notifications Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Notifications
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        {% for notification in notifications %}
+                            <a class="dropdown-item" href="#">{{ notification.content }}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+            </ul>
+        </div>
+      </nav>
+
+
+    <h2>Welcome to your Profile Dashboard, {{ request.user.matrimonialprofile.name }}!</h2>
+
+    <h3>Sent Interests:</h3>
+    {% for interest in sent_interests %}
+        {{ interest.receiver.name }}<br>
+    {% endfor %}
+
+    <h3>Received Interests:</h3>
+    {% for interest in received_interests %}
+        {{ interest.sender.name }}<br>
+    {% endfor %}
+
+    <h3>Shortlisted Profiles:</h3>
+    {% for shortlist in shortlisted_profiles %}
+        {{ shortlist.profile.name }}<br>
+    {% endfor %}
+
+    <h3>Chat History:</h3>
+    {% for message in chat_history %}
+        {% if message.sender == request.user.matrimonialprofile %}
+            Sent to {{ message.receiver.name }}: {{ message.content }}<br>
+        {% else %}
+            Received from {{ message.sender.name }}: {{ message.content }}<br>
+        {% endif %}
+    {% endfor %}
+</body>

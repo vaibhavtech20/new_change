@@ -423,3 +423,29 @@ def profile_detail(request, receiver_id):
     }
 
     return render(request, 'profile_detail.html', context)
+
+from features.models import Interest, Shortlist, Message
+@login_required
+def dashboard(request):
+    user_profile = request.user.matrimonialprofile
+
+    # Fetch sent and received interests
+    sent_interests = Interest.objects.filter(sender=user_profile)
+    received_interests = Interest.objects.filter(receiver=user_profile)
+
+    # Fetch shortlisted profiles
+    shortlisted_profiles = Shortlist.objects.filter(user=user_profile)
+
+    # Fetch chat history
+    sent_messages = Message.objects.filter(sender=user_profile)
+    received_messages = Message.objects.filter(receiver=user_profile)
+    chat_history = sent_messages | received_messages
+
+    context = {
+        'sent_interests': sent_interests,
+        'received_interests': received_interests,
+        'shortlisted_profiles': shortlisted_profiles,
+        'chat_history': chat_history,
+    }
+
+    return render(request, 'dashboard.html', context)
