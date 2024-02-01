@@ -115,8 +115,6 @@
                             
                         
                             <a href="{% url 'chat' receiver_id=profile.id %}" class="btn btn-info d-inline-block">Chat</a>
-                            
-                        
                         </div>
                         
 
@@ -152,9 +150,7 @@
 </div> -->
                     </div>
                 {% endfor %}
-                {% if shortlisted_profile %}
-                <p>{{ shortlisted_profile.name }} has been successfully shortlisted!</p>
-                {% endif %}
+
 
                 
                 <!-- <li>

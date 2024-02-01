@@ -357,21 +357,41 @@ def chat(request, receiver_id):
 
 # views.py
 
-def shortlist(request, profile_id):
-    # user_profile = MatrimonialProfile.objects.get(user=request.user)
-    # profile_to_shortlist = MatrimonialProfile.objects.get(id=profile_id)
-    user_profile = MatrimonialProfile.objects.get(email=request.user.email)
+# def shortlist(request, profile_id):
+#     # user_profile = MatrimonialProfile.objects.get(user=request.user)
+#     # profile_to_shortlist = MatrimonialProfile.objects.get(id=profile_id)
+#     user_profile = MatrimonialProfile.objects.get(email=request.user.email)
     
+#     profile_to_shortlist = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=profile_id)
+
+#     # Check if the profile is not already shortlisted
+#     existing_shortlist = Shortlist.objects.filter(user=user_profile, profile=profile_to_shortlist)
+#     if not existing_shortlist.exists():
+#         Shortlist.objects.create(user=user_profile, profile=profile_to_shortlist)
+    
+#     return redirect('profile_detail', profile_id=profile_id)
+
+
+def shortlist(request, profile_id):
+    user_profile = MatrimonialProfile.objects.get(email=request.user.email)
     profile_to_shortlist = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=profile_id)
 
-    # Check if the profile is not already shortlisted
     existing_shortlist = Shortlist.objects.filter(user=user_profile, profile=profile_to_shortlist)
     if not existing_shortlist.exists():
         Shortlist.objects.create(user=user_profile, profile=profile_to_shortlist)
-    
-    return redirect('profile_detail', profile_id=profile_id)
 
+    # Assuming 'profiles' is a queryset of all profiles you want to display
+    # on the page. Adjust this queryset according to your needs.
+    profiles = MatrimonialProfile.objects.exclude(email=request.user.email)
 
+    # Other context variables can be added as needed
+    context = {
+        'user_profile': user_profile,
+        'profiles': profiles,
+        'shortlisted_profile': profile_to_shortlist,  # The recently shortlisted profile
+    }
+
+    return render(request, 'profile.html', context)
 #notification
 from django.shortcuts import get_object_or_404
 from features.models import Notification

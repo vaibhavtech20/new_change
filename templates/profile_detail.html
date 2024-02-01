@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+{% load static %}
+{% csrf_token %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -58,6 +60,7 @@
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-secondary">Shortlist</button>
                             </form>
+                            
 
                             <a href="{% url 'chat' receiver_id=receiver_profile.id %}" class="btn btn-info d-inline-block">Chat</a>
                         </div>
@@ -66,6 +69,10 @@
                     <!-- Display additional information based on the context -->
                     {% if sender_has_sent_interest %}
                         <p>You have already sent interest to {{ receiver_profile.user.username }}.</p>
+                    {% endif %}
+
+                    {% if shortlisted_profile %}
+                        <p>{{ shortlisted_profile.name }} has been successfully shortlisted!</p>
                     {% endif %}
 
                 </div>

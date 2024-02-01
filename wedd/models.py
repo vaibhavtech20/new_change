@@ -91,8 +91,8 @@ class MatrimonialProfile(models.Model):
     # section 9 : Document upload
     biodata = models.FileField(upload_to='uploads/', null=True, blank=True)
 
-
-    def __str__(self):
+    
+    def __str__(self): 
         return str(self.name)
 
 class Interaction(models.Model):

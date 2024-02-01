@@ -46,9 +46,10 @@
                     <!-- Chat messages container -->
                     <div id="chat-messages" class="mb-3">
                     <!-- Display Chat Messages -->
+                    
                     <div>
                         {% for message in messages %}
-                            <p>{{ message.sender.user.username }}: {{ message.content }}</p>
+                            <p>{{ message.sender.name }}: {{ message.content }}</p>
                         {% endfor %}
                     </div>
                         <!-- Example message: -->
