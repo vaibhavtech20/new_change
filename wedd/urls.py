@@ -1,6 +1,7 @@
 from django.urls import path,re_path
 from .views import login
 from .import views
+from .views import dashboard, accept_reject_interest
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from .views import (
@@ -21,6 +22,7 @@ urlpatterns = [
     # path('profile_detail', views.profile_detail, name='profile_detail'),
     # path('profile/<int:profile_id>/', views.profile, name='profile'),
     path('dashboard', views.dashboard, name='dashboard'),
+    path('accept_reject_interest/<int:interest_id>/<str:action>/', accept_reject_interest, name='accept_reject_interest'),
 
     # Password reset views
     path('password_reset/', PasswordResetView.as_view(), name='password_reset'),

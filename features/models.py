@@ -7,6 +7,7 @@ class Interest(models.Model):
     sender = models.ForeignKey(MatrimonialProfile, related_name='sent_interests', on_delete=models.CASCADE)
     receiver = models.ForeignKey(MatrimonialProfile, related_name='received_interests', on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
+    is_accepted = models.BooleanField(null=True, blank=True)  # Add this line
 
 # Chatting
 

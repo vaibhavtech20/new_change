@@ -37,9 +37,14 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        .inline {
+            display: inline; /* Make the spans display inline */
+            margin-right: 80px; /* Add some space between sections */
+        }
     </style>
 </head>
 <body>
+    {% load custom_filters %}
     {% csrf_token %}
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -95,12 +100,23 @@
                 <h2>Other Profiles</h2>
                 {% for profile in other_profiles %}
                     <div class="profile-card">
+                        <img style="height:23em;" src="{{ profile.profile_pic.url }}" alt="{{ profile.name }} Image" class="img-fluid mb-3">
                         <p>Name: {{ profile.name }}</p>
-                        <p>Email: {{ profile.email }}</p>
-
-                        <img src="{{ profile.profile_pic.url }}" alt="{{ profile.name }} Image" class="img-fluid mb-3">
-                        <p>Name: {{ profile.name }}</p>
-                        <p>Date of Birth: {{ profile.date_of_birth }}</p>
+                        {% with dob=profile.date_of_birth %}
+                        <span class="inline">{{ dob|calculate_age }} years {{profile.height}} inch</span><span class="inline"></span>
+                        {% endwith %}
+                        <br>
+                        <span class="inline">{{ profile.highest_education }}</span>{{ profile.occupation }} <span class="inline"></span>   
+                        <br>
+                        <span class="inline">{{ profile.city_living }}</span><span class="inline"></span> 
+                        <br>
+                        <br>
+                        <!--                         
+                        {% with dob=profile.date_of_birth %}
+                            <p>Age: {{ dob|calculate_age }} years</p>
+                        {% endwith %}
+                        <p>Education: {{ profile.highest_education }}</p>
+                        <p>Date of Birth: {{ profile.date_of_birth }}</p> -->
 
                         
                         <div class="action-buttons">

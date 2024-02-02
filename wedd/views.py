@@ -425,13 +425,89 @@ def profile_detail(request, receiver_id):
     return render(request, 'profile_detail.html', context)
 
 from features.models import Interest, Shortlist, Message
+# @login_required
+# def dashboard(request):
+#     user_profile = MatrimonialProfile.objects.get(email=request.user.email)
+
+#     # Fetch sent and received interests
+#     sent_interests = Interest.objects.filter(sender=user_profile)
+#     received_interests = Interest.objects.filter(receiver=user_profile)
+
+#     # Fetch shortlisted profiles
+#     shortlisted_profiles = Shortlist.objects.filter(user=user_profile)
+
+#     # Fetch chat history
+#     sent_messages = Message.objects.filter(sender=user_profile)
+#     received_messages = Message.objects.filter(receiver=user_profile)
+#     chat_history = sent_messages | received_messages
+
+#     context = {
+#         'sent_interests': sent_interests,
+#         'received_interests': received_interests,
+#         'shortlisted_profiles': shortlisted_profiles,
+#         'chat_history': chat_history,
+#     }
+
+#     return render(request, 'dashboard.html', context)
+
+
+# @login_required
+# def dashboard(request):
+#     user_profile = MatrimonialProfile.objects.get(email=request.user.email)
+
+#     # Fetch received interests
+#     received_interests = Interest.objects.filter(receiver=user_profile, is_accepted=None)
+#     accepted_interests = Interest.objects.filter(receiver=user_profile, is_accepted=True)
+
+#     # Fetch shortlisted profiles
+#     shortlisted_profiles = Shortlist.objects.filter(user=user_profile)
+
+#     # Fetch chat history
+#     sent_messages = Message.objects.filter(sender=user_profile)
+#     received_messages = Message.objects.filter(receiver=user_profile)
+#     chat_history = sent_messages | received_messages
+
+#     context = {
+#         'received_interests': received_interests,
+#         'accepted_interests': accepted_interests,
+#         'shortlisted_profiles': shortlisted_profiles,
+#         'chat_history': chat_history,
+#     }
+
+#     return render(request, 'dashboard.html', context)
+
+# @login_required
+# def accept_reject_interest(request, interest_id, action):
+#     interest = Interest.objects.get(pk=interest_id)
+
+#     if action == 'accept':
+#         # Perform actions when interest is accepted
+#         interest.is_accepted = True
+#         interest.save()
+
+#         # Optionally, you can perform other actions here, like enabling chat or phone number visibility
+#         # ...
+
+#     elif action == 'reject':
+#         # Perform actions when interest is rejected
+#         interest.is_accepted = False
+#         interest.save()
+
+#     return redirect('dashboard')
+
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from features.models import Interest, Message, MatrimonialProfile
+
 @login_required
 def dashboard(request):
-    user_profile = request.user.matrimonialprofile
+    user_profile = MatrimonialProfile.objects.get(email=request.user.email)
 
-    # Fetch sent and received interests
+    # Fetch received interests
     sent_interests = Interest.objects.filter(sender=user_profile)
-    received_interests = Interest.objects.filter(receiver=user_profile)
+    received_interests = Interest.objects.filter(receiver=user_profile, is_accepted=None)
+    accepted_interests = Interest.objects.filter(receiver=user_profile, is_accepted=True)
 
     # Fetch shortlisted profiles
     shortlisted_profiles = Shortlist.objects.filter(user=user_profile)
@@ -442,10 +518,55 @@ def dashboard(request):
     chat_history = sent_messages | received_messages
 
     context = {
-        'sent_interests': sent_interests,
         'received_interests': received_interests,
+        'accepted_interests': accepted_interests,
         'shortlisted_profiles': shortlisted_profiles,
         'chat_history': chat_history,
     }
 
     return render(request, 'dashboard.html', context)
+
+@login_required
+def accept_reject_interest(request, interest_id, action):
+    interest = Interest.objects.get(pk=interest_id)
+
+    if action == 'accept':
+        # Perform actions when interest is accepted
+        interest.is_accepted = True
+        interest.save()
+
+        # Additional actions - enable chat or phone number visibility
+        enable_chat_phone_visibility(interest)
+
+    elif action == 'reject':
+        # Perform actions when interest is rejected
+        interest.is_accepted = False
+        interest.save()
+
+    return redirect('dashboard')
+
+# views.py
+
+from features.models import Message  # Import your chat message model
+
+def enable_chat_phone_visibility(interest):
+    sender_profile = interest.sender
+    receiver_profile = interest.receiver
+
+    # Placeholder for phone visibility logic (replace with your actual logic)
+    sender_profile.is_phone_visible = True
+    sender_profile.save()
+
+    receiver_profile.is_phone_visible = True
+    receiver_profile.save()
+
+    # Create a chat message (replace with your actual logic)
+    chat_message = Message.objects.create(
+        sender=sender_profile,
+        receiver=receiver_profile,
+        content=f"Congratulations! You can now chat with {sender_profile.name}."
+    )
+
+    # Placeholder for chat visibility logic (replace with your actual logic)
+    sender_profile.sent_messages.add(chat_message)
+    receiver_profile.received_messages.add(chat_message)

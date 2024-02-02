@@ -42,39 +42,15 @@
                 </li>
             </ul>
         </div>
-    </nav>
+      </nav>
 
-
-
-    <h2>Welcome to your Profile Dashboard, {{ request.user.name }}!</h2>
-
-    <h3>Sent Interests:</h3>
-    {% for interest in sent_interests %}
-        {{ interest.receiver.name }}<br>
-    {% endfor %}
-
+    <h2>Welcome to your Profile Dashboard, {{ request.user.matrimonialprofile.name }}!</h2>
 
     <h3>Received Interests:</h3>
     {% for interest in received_interests %}
         {{ interest.sender.name }}
         <a href="{% url 'accept_reject_interest' interest.id 'accept' %}">Accept</a>
         <a href="{% url 'accept_reject_interest' interest.id 'reject' %}">Reject</a><br>
-
-        {% if interest.is_accepted %}
-            <p>Chat or phone number options:</p>
-            <ul>
-                <li>
-                    <a href="{% url 'chat_with_profile' interest.sender.id %}">Chat with {{ interest.sender.name }}</a>
-                </li>
-                <li>
-                    {% if interest.sender.is_phone_visible %}
-                        Phone number: {{ interest.sender.phone_no }}
-                    {% else %}
-                        Phone number not visible
-                    {% endif %}
-                </li>
-            </ul>
-        {% endif %}
     {% endfor %}
 
     <h3>Accepted Interests:</h3>
@@ -89,7 +65,7 @@
 
     <h3>Chat History:</h3>
     {% for message in chat_history %}
-        {% if message.sender == request.user.name %}
+        {% if message.sender == request.user.email %}
             Sent to {{ message.receiver.name }}: {{ message.content }}<br>
         {% else %}
             Received from {{ message.sender.name }}: {{ message.content }}<br>
