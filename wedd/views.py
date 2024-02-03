@@ -321,7 +321,7 @@ def home(request):
 # views.py
 
 from django.shortcuts import render, redirect
-from features.models import Interest,Message,Shortlist
+from features.models import Interest,Message,Shortlist,ConnectionRequest
 
 def send_interest(request, receiver_id):
     sender_profile = MatrimonialProfile.objects.get(email=request.user.email)
@@ -423,6 +423,84 @@ def profile_detail(request, receiver_id):
     }
 
     return render(request, 'profile_detail.html', context)
+
+# @login_required
+# def profile_detail(request, receiver_id):
+#     # Get the receiver's profile
+#     receiver_profile = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=receiver_id)
+
+#     # Check if the receiver is the logged-in user
+#     is_self_profile = request.user.email == receiver_profile.email
+
+#     # Check if the sender has already sent a connection request
+#     sender_has_sent_request = False
+#     if not is_self_profile:
+#         sender_has_sent_request = ConnectionRequest.objects.filter(
+#             sender=request.user,
+#             receiver=receiver_profile.user,
+#             status='pending'
+#         ).exists()
+
+#     context = {
+#         'receiver_profile': receiver_profile,
+#         'is_self_profile': is_self_profile,
+#         'sender_has_sent_request': sender_has_sent_request,
+#     }
+
+#     return render(request, 'profile_detail.html', context)
+
+# views.py
+# views.py
+# views.py
+# wedd/views.py
+
+# wedd/views.py
+
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from features.models import ConnectionRequest
+from acc.models import CustomUser
+
+# @login_required
+# def profile_detail(request, receiver_id):
+#     receiver_profile = get_object_or_404(MatrimonialProfile, id=receiver_id)
+
+#     is_self_profile = request.user.email == receiver_profile.email
+
+#     # Check if the sender has already sent connection request
+#     sender_has_sent_request = False
+#     if not is_self_profile:
+#         # Assuming sender_name is passed in the URL parameters
+#         sender_name = request.GET.get('sender_name', '')
+        
+#         try:
+#             # Get the sender instance based on the name
+#             sender = CustomUser.objects.get(name=sender_name)
+
+#             # Check if the sender has sent a request
+#             sender_has_sent_request = ConnectionRequest.objects.filter(
+#                 sender=sender,
+#                 receiver=receiver_profile.user.matrimonialprofile,
+#                 status='pending'
+#             ).exists()
+#         except CustomUser.DoesNotExist:
+#             # Handle the case when the sender is not found
+#             # You can redirect to an error page or show an appropriate message
+#             return HttpResponse("Sender not found", status=404)
+
+#     context = {
+#         'receiver_profile': receiver_profile,
+#         'is_self_profile': is_self_profile,
+#         'sender_has_sent_request': sender_has_sent_request,
+#     }
+
+#     return render(request, 'profile_detail.html', context)
+
+
+
+
+
 
 from features.models import Interest, Shortlist, Message
 # @login_required
@@ -570,3 +648,71 @@ def enable_chat_phone_visibility(interest):
     # Placeholder for chat visibility logic (replace with your actual logic)
     sender_profile.sent_messages.add(chat_message)
     receiver_profile.received_messages.add(chat_message)
+
+
+def download_biodata(request, pk):
+    profile = get_object_or_404(MatrimonialProfile, pk=pk)
+
+    if profile.biodata:
+        # Build the response with the file
+        response = HttpResponse(profile.biodata.file, content_type='application/pdf')  # Change the content type based on your file type
+        response['Content-Disposition'] = f'attachment; filename="{profile.biodata.name}"'
+        return response
+
+    # Handle the case when biodata file is not present
+    return HttpResponse("File not found", status=404)
+
+from django.shortcuts import get_object_or_404, redirect
+# @login_required
+# def send_connection_request(request, receiver_id):
+#     receiver = get_object_or_404(MatrimonialProfile, id=receiver_id)
+
+#     # Check if a request already exists
+#     existing_request = ConnectionRequest.objects.filter(sender=request.user, receiver=receiver, status='pending').exists()
+#     if not existing_request:
+#         connection_request = ConnectionRequest.objects.create(sender=request.user, receiver=receiver, status='pending')
+#         request.user.matrimonialprofile.connection_requests.add(connection_request)
+
+#     return redirect('profile_detail', receiver_id=receiver_id)
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from .models import MatrimonialProfile
+
+@login_required
+def send_connection_request(request, receiver_id):
+    # Get the receiver's profile
+    receiver = get_object_or_404(MatrimonialProfile, id=receiver_id)
+
+    # Check if a pending connection request already exists
+    existing_request = ConnectionRequest.objects.filter(
+        sender=request.user.matrimonialprofile,
+        receiver=receiver,
+        status='pending'
+    ).exists()
+
+    if not existing_request:
+        # Create a new connection request with the sender field set
+        ConnectionRequest.objects.create(
+            sender=request.user.matrimonialprofile,
+            receiver=receiver,
+            status='pending'
+        )
+
+    # Redirect or add appropriate logic based on your requirements
+    return HttpResponse("Connection request sent successfully")
+
+
+
+# views.py
+@login_required
+def handle_connection_request(request, request_id, action):
+    connection_request = get_object_or_404(ConnectionRequest, id=request_id, receiver=request.user, status='pending')
+
+    if action == 'accept':
+        connection_request.status = 'accepted'
+        connection_request.save()
+    elif action == 'reject':
+        connection_request.status = 'rejected'
+        connection_request.save()
+
+    return redirect('profile_detail', receiver_id=request.user.id)

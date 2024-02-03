@@ -25,7 +25,6 @@
 from django.db import models
 from django.db.models import BigAutoField
 from django.conf import settings
-# from acc.models import CustomUserManager 
 
 class MatrimonialProfile(models.Model):
     id = BigAutoField(primary_key=True)
@@ -90,10 +89,11 @@ class MatrimonialProfile(models.Model):
 
     # section 9 : Document upload
     biodata = models.FileField(upload_to='uploads/', null=True, blank=True)
-
     
     def __str__(self): 
         return str(self.name)
+
+
 
 class Interaction(models.Model):
     sender = models.ForeignKey(MatrimonialProfile, on_delete=models.CASCADE, related_name='sent_interactions')

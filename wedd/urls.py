@@ -1,7 +1,7 @@
 from django.urls import path,re_path
 from .views import login
 from .import views
-from .views import dashboard, accept_reject_interest
+from .views import dashboard, accept_reject_interest , download_biodata , send_connection_request ,handle_connection_request
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from .views import (
@@ -23,11 +23,14 @@ urlpatterns = [
     # path('profile/<int:profile_id>/', views.profile, name='profile'),
     path('dashboard', views.dashboard, name='dashboard'),
     path('accept_reject_interest/<int:interest_id>/<str:action>/', accept_reject_interest, name='accept_reject_interest'),
+    path('download-biodata/<int:pk>/', download_biodata, name='download_biodata'),
+    path('send-connection-request/<int:receiver_id>/', send_connection_request, name='send_connection_request'),
+    path('handle-connection-request/<int:request_id>/<str:action>/', handle_connection_request, name='handle_connection_request'),
 
     # Password reset views
     path('password_reset/', PasswordResetView.as_view(), name='password_reset'),
     path('password_reset/done/', PasswordResetDoneView.as_view(), name='password_reset_done'),
-     re_path(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    re_path(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 

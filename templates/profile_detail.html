@@ -84,13 +84,27 @@
                         <p>Family Based City: {{ receiver_profile.family_based_city }}</p>
                         <p>Maternal Uncles Name: {{ receiver_profile.maternal_uncles_name }}</p>
                         <h4>Contact Details</h4>
-                        <p>Phone No: {{ receiver_profile.phone_no }}</p>
+                        <!-- <p>Phone No: {{ receiver_profile.phone_no }}</p> -->
+                        {% if connection_accepted %}
+                            <p>Phone No: {{ receiver_profile.phone_no }}</p>
+                        {% elif not is_self_profile %}
+                            {% if sender_has_sent_request %}
+                                <p>Request sent. Waiting for acceptance.</p>
+                            {% else %}
+                                <a href="{% url 'send_connection_request' receiver_id=receiver_profile.id %}">
+                                    <button>Send Connection Request</button>
+                                </a>
+                            {% endif %}
+                        {% endif %}
                         <h4>Lifestyle</h4>
                         <p>Lifestyle: {{ receiver_profile.lifestyle }}</p>
                         <p>Drinking Habits: {{ receiver_profile.drinking_habits }}</p>
                         <p>Smoking Habits: {{ receiver_profile.smoking_habits }}</p>
-                        <h4>Profile Biodata If Your Download So Click</h4>
-                        <p>Biodata: <a href="{{ receiver_profile.biodata }}"></a></p>
+                        <h4>If Your Want to Download Profile Biodata So Click Download Button</h4>
+                        <a href="{% url 'download_biodata' pk=receiver_profile.id %}" download>
+                            <button>Download</button>
+                        </a>
+                        <p></p>
                         <!-- Add more profile details as needed -->
                     </div>
 
