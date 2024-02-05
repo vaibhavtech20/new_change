@@ -155,7 +155,7 @@ def update_profile(request):
         form = MatrimonialProfileForm(request.POST, instance=user_profile)
         if form.is_valid():
             form.save()
-            return redirect('user_profile')  # Redirect to the user's profile page after successful update
+            return redirect('profile')  # Redirect to the user's profile page after successful update
     else:
         form = MatrimonialProfileForm(instance=user_profile)
 
@@ -352,7 +352,10 @@ def chat(request, receiver_id):
         (Q(sender=sender_profile, receiver=receiver_profile) | Q(sender=receiver_profile, receiver=sender_profile))
     ).order_by('timestamp')
 
-    return render(request, 'chat.html', {'messages': messages, 'receiver_id': receiver_id})
+     # Fetch phone numbers
+    phone_numbers = MatrimonialProfile.objects.filter(id__in=[sender_profile.id, receiver_profile.id])
+
+    return render(request, 'chat.html', {'messages': messages, 'receiver_id': receiver_id , 'phone_numbers': phone_numbers})
 
 
 # views.py
@@ -412,14 +415,20 @@ def profile_detail(request, receiver_id):
 
     # Check if the sender has already sent interest
     sender_has_sent_interest = False
+
+    connection_request_accepted = False
+
     if not is_self_profile:
         sender_profile = MatrimonialProfile.objects.get(email=request.user.email)
         sender_has_sent_interest = receiver_profile.received_interests.filter(sender=sender_profile).exists()
+
+        connection_request_accepted = check_connection_acceptance(sender_profile, receiver_profile)
 
     context = {
         'receiver_profile': receiver_profile,
         'is_self_profile': is_self_profile,
         'sender_has_sent_interest': sender_has_sent_interest,
+        'connection_request_accepted': connection_request_accepted, 
     }
 
     return render(request, 'profile_detail.html', context)
@@ -594,12 +603,15 @@ def dashboard(request):
     sent_messages = Message.objects.filter(sender=user_profile)
     received_messages = Message.objects.filter(receiver=user_profile)
     chat_history = sent_messages | received_messages
-
+    
+    # Fetch phone numbers
+    phone_numbers = MatrimonialProfile.objects.filter(id__in=[interest.sender.id for interest in received_interests if interest.is_accepted])
     context = {
         'received_interests': received_interests,
         'accepted_interests': accepted_interests,
         'shortlisted_profiles': shortlisted_profiles,
         'chat_history': chat_history,
+        'phone_numbers': phone_numbers,  # Add this line to include phone numbers in the context
     }
 
     return render(request, 'dashboard.html', context)
@@ -678,14 +690,47 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from .models import MatrimonialProfile
 
+# @login_required
+# def send_connection_request(request, receiver_id):
+#     # Get the receiver's profile
+#     # receiver = get_object_or_404(MatrimonialProfile, id=receiver_id)
+#     receiver = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=receiver_id)
+    
+
+#     # Check if a pending connection request already exists
+#     existing_request = ConnectionRequest.objects.filter(
+#         sender=request.user.matrimonialprofile,
+#         receiver=receiver,
+#         status='pending'
+#     ).exists()
+
+#     if not existing_request:
+#         # Create a new connection request with the sender field set
+#         ConnectionRequest.objects.create(
+#             sender=request.user.matrimonialprofile,
+#             receiver=receiver,
+#             status='pending'
+#         )
+
+#     # Redirect or add appropriate logic based on your requirements
+#     return HttpResponse("Connection request sent successfully")
+
 @login_required
 def send_connection_request(request, receiver_id):
     # Get the receiver's profile
     receiver = get_object_or_404(MatrimonialProfile, id=receiver_id)
 
+    # Check if the sender has a MatrimonialProfile
+    try:
+        # sender_profile = request.user.matrimonialprofile
+        sender_profile = MatrimonialProfile.objects.get(email=request.user.email)
+    except MatrimonialProfile.DoesNotExist:
+        # Handle the case where the sender doesn't have a MatrimonialProfile
+        return HttpResponse("Sender profile not found", status=400)
+
     # Check if a pending connection request already exists
     existing_request = ConnectionRequest.objects.filter(
-        sender=request.user.matrimonialprofile,
+        sender=sender_profile,
         receiver=receiver,
         status='pending'
     ).exists()
@@ -693,16 +738,14 @@ def send_connection_request(request, receiver_id):
     if not existing_request:
         # Create a new connection request with the sender field set
         ConnectionRequest.objects.create(
-            sender=request.user.matrimonialprofile,
+            sender=sender_profile,
             receiver=receiver,
             status='pending'
         )
 
     # Redirect or add appropriate logic based on your requirements
     return HttpResponse("Connection request sent successfully")
-
-
-
+    # return redirect('dashboard')
 # views.py
 @login_required
 def handle_connection_request(request, request_id, action):
@@ -711,8 +754,22 @@ def handle_connection_request(request, request_id, action):
     if action == 'accept':
         connection_request.status = 'accepted'
         connection_request.save()
+
+        # Additional actions - enable chat or phone number visibility
+        enable_chat_phone_no_visibility(connection_request.sender, connection_request.receiver)
+
     elif action == 'reject':
         connection_request.status = 'rejected'
         connection_request.save()
 
     return redirect('profile_detail', receiver_id=request.user.id)
+
+def check_connection_acceptance(sender_profile, receiver_profile):
+    
+    connection_request = ConnectionRequest.objects.filter(
+        sender=sender_profile,
+        receiver=receiver_profile,
+        status='accepted'
+    ).exists()
+
+    return connection_request

@@ -89,6 +89,9 @@ class MatrimonialProfile(models.Model):
 
     # section 9 : Document upload
     biodata = models.FileField(upload_to='uploads/', null=True, blank=True)
+
+    # Section 10: Phone Number Visibility
+    is_phone_visible = models.BooleanField(default=False)
     
     def __str__(self): 
         return str(self.name)

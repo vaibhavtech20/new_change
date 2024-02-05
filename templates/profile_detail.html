@@ -83,9 +83,9 @@
                         <p>Living With Parents: {{ receiver_profile.living_with_parents }}</p>
                         <p>Family Based City: {{ receiver_profile.family_based_city }}</p>
                         <p>Maternal Uncles Name: {{ receiver_profile.maternal_uncles_name }}</p>
-                        <h4>Contact Details</h4>
+                        <!-- <h4>Contact Details</h4> -->
                         <!-- <p>Phone No: {{ receiver_profile.phone_no }}</p> -->
-                        {% if connection_accepted %}
+                        <!-- {% if connection_accepted %}
                             <p>Phone No: {{ receiver_profile.phone_no }}</p>
                         {% elif not is_self_profile %}
                             {% if sender_has_sent_request %}
@@ -94,6 +94,23 @@
                                 <a href="{% url 'send_connection_request' receiver_id=receiver_profile.id %}">
                                     <button>Send Connection Request</button>
                                 </a>
+                            {% endif %}
+                        {% endif %} -->
+                        <h4>Contact Details</h4>
+                        <!-- other details... -->
+                        {% if connection_accepted %}
+                            <p>Phone No: {{ receiver_profile.phone_no }}</p>
+                        {% elif not is_self_profile %}
+                            {% if sender_has_sent_request %}
+                                <p>Request sent. Waiting for acceptance.</p>
+                            {% else %}
+                                {% if connection_request_accepted %}
+                                    <p>Phone No: {{ receiver_profile.phone_no }}</p>
+                                {% else %}
+                                    <a href="{% url 'send_connection_request' receiver_id=receiver_profile.id %}">
+                                        <button>Send Connection Request</button>
+                                    </a>
+                                {% endif %}
                             {% endif %}
                         {% endif %}
                         <h4>Lifestyle</h4>
