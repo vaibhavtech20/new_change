@@ -6,8 +6,15 @@ from acc.models import CustomUser
 class Interest(models.Model):
     sender = models.ForeignKey(MatrimonialProfile, related_name='sent_interests', on_delete=models.CASCADE)
     receiver = models.ForeignKey(MatrimonialProfile, related_name='received_interests', on_delete=models.CASCADE)
+    # STATUS_CHOICES = [
+    #     ('pending', 'Pending'),
+    #     ('accepted', 'Accepted'),
+    #     ('rejected', 'Rejected'),
+    # ]
+    # status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     timestamp = models.DateTimeField(auto_now_add=True)
     is_accepted = models.BooleanField(null=True, blank=True)  # Add this line
+
 
 # Chatting
 

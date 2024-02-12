@@ -4,6 +4,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 import random
 import string
+from features.models import ConnectionRequest
 
 # Function to generate a random verification code
 def generate_verification_code():
@@ -16,3 +17,7 @@ def send_verification_email(email, verification_code):
     subject = 'Matrimony Website Email Verification'
     message = f'Hello,\n\nYour verification code is: {verification_code}\n\nPlease click the following link to verify your email: {verification_link}'
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+
+def check_connection_acceptance(sender_profile, receiver_profile):
+    connection_request = ConnectionRequest.objects.filter(sender=sender_profile, receiver=receiver_profile, status='accepted').first()
+    return connection_request is not None

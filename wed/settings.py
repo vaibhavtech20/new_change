@@ -148,7 +148,7 @@ SITE_URL = 'https://automatic-space-waffle-v9w5vgqpp4jhpv7p-8000.app.github.dev'
 import dj_database_url
 
 DATABASES = {
-    'default' : dj_database_url.parse('postgres://wand:zdnUHAGWnQVa34zqOeSAIwR5sGC4znMC@dpg-cn0cu9ed3nmc738aejmg-a.singapore-postgres.render.com/wand')
+    'default' : dj_database_url.parse('postgres://wande:6WL4M50I6I5O6OotI4bEMiH64ez6XGSf@dpg-cn2sfstjm4es73bg1qig-a.oregon-postgres.render.com/wande')
  
 }
 

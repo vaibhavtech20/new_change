@@ -64,6 +64,9 @@
                 <a class="nav-link" href="{% url 'dashboard' %}">dashboard</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="#">profile display</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="{% url 'logout' %}">Logout</a>
             </li>
              <!-- Notifications Dropdown -->
@@ -120,6 +123,7 @@
 
                         
                         <div class="action-buttons">
+                            <a class="btn btn-danger" href="{% url 'profile_view' receiver_id=profile.id %}">View</a>
                             {% csrf_token %}
                             <form method="post" action="{% url 'send_interest' receiver_id=profile.id %}" class="d-inline-block">
                                 {% csrf_token %}

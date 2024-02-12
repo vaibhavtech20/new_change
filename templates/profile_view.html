@@ -83,59 +83,6 @@
                         <p>Living With Parents: {{ receiver_profile.living_with_parents }}</p>
                         <p>Family Based City: {{ receiver_profile.family_based_city }}</p>
                         <p>Maternal Uncles Name: {{ receiver_profile.maternal_uncles_name }}</p>
-                        {% if connection_request_accepted %}
-                          <p>Phone Number: {{ receiver_profile.phone_no }}</p>
-                        {% else %}
-                           {% csrf_token %}
-                            <form method="post">
-                                {% csrf_token %}
-                                {{ form.as_p }}
-                                <button type="submit">Send Request to View Phone Number</button>
-                            </form>
-                        {% endif %}
-                        <!-- <h4>Contact Details</h4> -->
-                        <!-- <p>Phone No: {{ receiver_profile.phone_no }}</p> -->
-                        <!-- {% if connection_accepted %}
-                            <p>Phone No: {{ receiver_profile.phone_no }}</p>
-                        {% elif not is_self_profile %}
-                            {% if sender_has_sent_request %}
-                                <p>Request sent. Waiting for acceptance.</p>
-                            {% else %}
-                                <a href="{% url 'send_connection_request' receiver_id=receiver_profile.id %}">
-                                    <button>Send Connection Request</button>
-                                </a>
-                            {% endif %}
-                        {% endif %} -->
-                        <!-- <h4>Contact Details</h4> -->
-                        <!-- other details... -->
-                        <!-- {% if connection_accepted %}
-                            <p>Phone No: {{ receiver_profile.phone_no }}</p>
-                        {% elif not is_self_profile %}
-                            {% if sender_has_sent_request %}
-                                <p>Request sent. Waiting for acceptance.</p>
-                            {% else %}
-                                {% if connection_request_accepted %}
-                                    <p>Phone No: {{ receiver_profile.phone_no }}</p>
-                                {% else %}
-                                    <a href="{% url 'send_connection_request' receiver_id=receiver_profile.id %}">
-                                        <button>Send Connection Request</button>
-                                    </a>
-                                {% endif %}
-                            {% endif %}
-                        {% endif %} -->
-                        <!-- {% if connection_request_accepted %}
-                            <p>Phone Number: {{ receiver_profile.phone_no }}</p>
-                        {% else %}
-                            <form method="post">
-                                {% csrf_token %}
-                                {% if not sender_has_sent_interest %}
-                                    <button type="submit" name="send_interest">Send Interest</button>
-                                {% endif %}
-                                {% if not sender_has_sent_request %}
-                                    <button type="submit" name="send_request">Send Request to View Phone Number</button>
-                                {% endif %}
-                            </form>
-                        {% endif %} -->
                         <h4>Lifestyle</h4>
                         <p>Lifestyle: {{ receiver_profile.lifestyle }}</p>
                         <p>Drinking Habits: {{ receiver_profile.drinking_habits }}</p>
@@ -145,57 +92,9 @@
                             <button>Download</button>
                         </a>
                         <p></p>
-                       
-                        <!-- Add more profile details as needed -->
-                         <!-- Form for sender to view phone number and accept request -->
-    <!-- <form method="post" action="{% url 'profile_detail' receiver_id=receiver_profile.id %}">
-        {% csrf_token %}
-        {% if not is_self_profile %}
-            {% if not connection_request_accepted %}
-                <button type="submit" name="view_phone">View Phone Number</button>
-            {% endif %}
-        {% endif %}
-        {% if sender_has_sent_interest %}
-            {% if not connection_request_accepted %}
-                <button type="submit" name="accept_request">Accept Connection Request</button>
-            {% endif %}
-        {% endif %} -->
-    </form>
+                      
                     </div>
 
-                    <!-- Action buttons -->
-                    {% if not is_self_profile %}
-                        <div class="action-buttons">
-                            {% csrf_token %}
-                            <form method="post" action="{% url 'send_interest' receiver_id=receiver_profile.id %}" class="d-inline-block">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-primary">Send Interest</button>
-                            </form>
-
-                            <form method="post" action="{% url 'shortlist' profile_id=receiver_profile.id %}" class="d-inline-block">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-secondary">Shortlist</button>
-                            </form>
-                            
-
-                            <a href="{% url 'chat' receiver_id=receiver_profile.id %}" class="btn btn-info d-inline-block">Chat</a>
-                        </div>
-                    {% endif %}
-
-
-
-
-
-                    <!-- Display additional information based on the context -->
-                    {% if sender_has_sent_interest %}
-                        <p>You have already sent interest to {{ receiver_profile.user.username }}.</p>
-                    {% endif %}
-
-                    {% if shortlisted_profile %}
-                        <p>{{ shortlisted_profile.name }} has been successfully shortlisted!</p>
-                    {% endif %}
-
-                </div>
             </div>
         </div>
     </div>

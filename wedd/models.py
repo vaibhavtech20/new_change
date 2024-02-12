@@ -93,15 +93,31 @@ class MatrimonialProfile(models.Model):
     # Section 10: Phone Number Visibility
     is_phone_visible = models.BooleanField(default=False)
     
+    pending_requests = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='pending_profile_requests')
     def __str__(self): 
         return str(self.name)
 
-
+# class ViewRequest(models.Model):
+#     sender = models.ForeignKey(MatrimonialProfile, related_name='sent_requests', on_delete=models.CASCADE)
+#     receiver = models.ForeignKey(MatrimonialProfile, related_name='received_requests', on_delete=models.CASCADE)
+#     STATUS_CHOICES = [
+#         ('pending', 'Pending'),
+#         ('accepted', 'Accepted'),
+#         ('rejected', 'Rejected'),
+#     ]
+#     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+#     timestamp = models.DateTimeField(auto_now_add=True)
 
 class Interaction(models.Model):
     sender = models.ForeignKey(MatrimonialProfile, on_delete=models.CASCADE, related_name='sent_interactions')
     receiver = models.ForeignKey(MatrimonialProfile, on_delete=models.CASCADE, related_name='received_interactions')
     action = models.CharField(max_length=20)  # 'interest', 'shortlist', 'chat', 'ignore'
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+class PhoneRequest(models.Model):
+    sender = models.ForeignKey(MatrimonialProfile, on_delete=models.CASCADE, related_name='sent_phone_requests')
+    receiver = models.ForeignKey(MatrimonialProfile, on_delete=models.CASCADE, related_name='received_phone_requests')
+    is_accepted = models.BooleanField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 # class YourImageModel(models.Model):
 #     image = models.ImageField(upload_to='profile_pics/')

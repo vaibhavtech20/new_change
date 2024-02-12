@@ -321,7 +321,7 @@ def home(request):
 # views.py
 
 from django.shortcuts import render, redirect
-from features.models import Interest,Message,Shortlist,ConnectionRequest
+from features.models import Interest,Message,Shortlist
 
 def send_interest(request, receiver_id):
     sender_profile = MatrimonialProfile.objects.get(email=request.user.email)
@@ -404,35 +404,137 @@ def create_notification(user, content):
 
 
 
+# @login_required
+# def profile_detail(request, receiver_id):
+#     # Get the receiver's profile
+#     # receiver_profile = get_object_or_404(MatrimonialProfile, id=request.receiver.id)
+#     receiver_profile = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=receiver_id)
+
+#     # Check if the receiver is the logged-in user
+#     is_self_profile = request.user.email == receiver_profile.email
+
+#     # Check if the sender has already sent interest
+#     sender_has_sent_interest = False
+
+#     connection_request_accepted = False
+
+#     if not is_self_profile:
+#         sender_profile = MatrimonialProfile.objects.get(email=request.user.email)
+#         sender_has_sent_interest = receiver_profile.received_interests.filter(sender=sender_profile).exists()
+
+#         connection_request_accepted = check_connection_acceptance(sender_profile, receiver_profile)
+
+#     context = {
+#         'receiver_profile': receiver_profile,
+#         'is_self_profile': is_self_profile,
+#         'sender_has_sent_interest': sender_has_sent_interest,
+#         'connection_request_accepted': connection_request_accepted, 
+#     }
+
+#     return render(request, 'profile_detail.html', context)
+
+
+# @login_required
+# def profile_detail(request, receiver_id):
+#     receiver_profile = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=receiver_id)
+#     is_self_profile = request.user.email == receiver_profile.email
+#     sender_has_sent_interest = False
+#     connection_request_accepted = False
+
+#     if not is_self_profile:
+#         sender_profile = MatrimonialProfile.objects.get(email=request.user.email)
+#         sender_has_sent_interest = receiver_profile.received_interests.filter(sender=sender_profile).exists()
+
+#         connection_request_accepted = check_connection_acceptance(sender_profile, receiver_profile)
+
+#     context = {
+#         'receiver_profile': receiver_profile,
+#         'is_self_profile': is_self_profile,
+#         'sender_has_sent_interest': sender_has_sent_interest,
+#         'connection_request_accepted': connection_request_accepted,
+#     }
+
+#     if request.method == 'POST':
+#         if 'view_phone' in request.POST:
+#             if not connection_request_accepted:  # Check if connection request is already accepted
+#                 # Create a connection request
+#                 ConnectionRequest.objects.create(sender=sender_profile, receiver=receiver_profile, status='pending')
+#                 return HttpResponse("Request sent successfully. Phone number will be visible once the request is accepted.")
+#             else:
+#                 return HttpResponse("Phone number is already visible.")
+#         elif 'accept_request' in request.POST:
+#             # Accept the connection request
+#             connection_request = ConnectionRequest.objects.get(sender=sender_profile, receiver=receiver_profile, status='pending')
+#             connection_request.status = 'accepted'
+#             connection_request.save()
+
+#             return HttpResponse("Connection request accepted. Phone number is now visible.")
+
+#     return render(request, 'profile_detail.html', context)
+
+# @login_required
+# def profile_detail(request, receiver_id):
+#     receiver_profile = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=receiver_id)
+#     is_self_profile = request.user.email == receiver_profile.email
+#     sender_has_sent_interest = False
+#     connection_request_accepted = False
+
+#     if not is_self_profile:
+#         sender_profile = MatrimonialProfile.objects.get(email=request.user.email)
+#         sender_has_sent_interest = receiver_profile.received_interests.filter(sender=sender_profile).exists()
+
+#         connection_request_accepted = check_connection_acceptance(sender_profile, receiver_profile)
+
+#     context = {
+#         'receiver_profile': receiver_profile,
+#         'is_self_profile': is_self_profile,
+#         'sender_has_sent_interest': sender_has_sent_interest,
+#         'connection_request_accepted': connection_request_accepted,
+#     }
+
+#     if request.method == 'POST':
+#         if 'view_phone' in request.POST:
+#             if not connection_request_accepted:  # Check if connection request is already accepted
+#                 # Create a connection request
+#                 ConnectionRequest.objects.create(sender=sender_profile, receiver=receiver_profile, status='pending')
+#                 return HttpResponse("Request sent successfully. Phone number will be visible once the request is accepted.")
+#             else:
+#                 return HttpResponse("Phone number is already visible.")
+#         elif 'accept_request' in request.POST:
+#             # Accept the connection request
+#             connection_request = ConnectionRequest.objects.get(sender=sender_profile, receiver=receiver_profile, status='pending')
+#             connection_request.status = 'accepted'
+#             connection_request.save()
+
+#             return HttpResponse("Connection request accepted. Phone number is now visible.")
+
+#     return render(request, 'profile_detail.html', context)
+# from features.models import ConnectionRequest
+from .forms import PhoneRequestForm
+from .utils import check_connection_acceptance
+
 @login_required
 def profile_detail(request, receiver_id):
-    # Get the receiver's profile
-    # receiver_profile = get_object_or_404(MatrimonialProfile, id=request.receiver.id)
     receiver_profile = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=receiver_id)
+    sender_profile = MatrimonialProfile.objects.get(email=request.user.email)
+    sender_has_sent_request = ConnectionRequest.objects.filter(sender=sender_profile, receiver=receiver_profile, status='pending').exists()
+    connection_request_accepted = check_connection_acceptance(sender_profile, receiver_profile)
 
-    # Check if the receiver is the logged-in user
-    is_self_profile = request.user.email == receiver_profile.email
+    if request.method == 'POST':
+        form = PhoneRequestForm(request.POST)
+        if form.is_valid():
+            # Process the form data, send request, etc.
+            # For simplicity, let's assume it's saving the request to the database
+            if not sender_has_sent_request:
+                # Create a connection request
+                ConnectionRequest.objects.create(sender=sender_profile, receiver=receiver_profile, status='pending')
+                return redirect('profile_detail', receiver_id=receiver_id)
+            else:
+                return HttpResponse("You have already sent a request to view the phone number.")
+    else:
+        form = PhoneRequestForm()
 
-    # Check if the sender has already sent interest
-    sender_has_sent_interest = False
-
-    connection_request_accepted = False
-
-    if not is_self_profile:
-        sender_profile = MatrimonialProfile.objects.get(email=request.user.email)
-        sender_has_sent_interest = receiver_profile.received_interests.filter(sender=sender_profile).exists()
-
-        connection_request_accepted = check_connection_acceptance(sender_profile, receiver_profile)
-
-    context = {
-        'receiver_profile': receiver_profile,
-        'is_self_profile': is_self_profile,
-        'sender_has_sent_interest': sender_has_sent_interest,
-        'connection_request_accepted': connection_request_accepted, 
-    }
-
-    return render(request, 'profile_detail.html', context)
-
+    return render(request, 'profile_detail.html', {'receiver_profile': receiver_profile, 'sender_profile': sender_profile, 'form': form, 'connection_request_accepted': connection_request_accepted})
 # @login_required
 # def profile_detail(request, receiver_id):
 #     # Get the receiver's profile
@@ -468,7 +570,7 @@ def profile_detail(request, receiver_id):
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from features.models import ConnectionRequest
+# from features.models import ConnectionRequest
 from acc.models import CustomUser
 
 # @login_required
@@ -585,7 +687,7 @@ from features.models import Interest, Shortlist, Message
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from features.models import Interest, Message, MatrimonialProfile
+from features.models import Interest, Message,ConnectionRequest, MatrimonialProfile
 
 @login_required
 def dashboard(request):
@@ -764,12 +866,81 @@ def handle_connection_request(request, request_id, action):
 
     return redirect('profile_detail', receiver_id=request.user.id)
 
-def check_connection_acceptance(sender_profile, receiver_profile):
+# def check_connection_acceptance(sender_profile, receiver_profile):
     
-    connection_request = ConnectionRequest.objects.filter(
-        sender=sender_profile,
-        receiver=receiver_profile,
-        status='accepted'
-    ).exists()
+#     connection_request = ConnectionRequest.objects.filter(
+#         sender=sender_profile,
+#         receiver=receiver_profile,
+#         status='accepted'
+#     ).exists()
 
-    return connection_request
+#     return connection_request
+
+@login_required
+def profile_view(request, receiver_id):
+    # Get the receiver's profile
+    # receiver_profile = get_object_or_404(MatrimonialProfile, id=request.receiver.id)
+    receiver_profile = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=receiver_id)
+
+    # Check if the receiver is the logged-in user
+    is_self_profile = request.user.email == receiver_profile.email
+
+    # Check if the sender has already sent interest
+    sender_has_sent_interest = False
+
+    connection_request_accepted = False
+
+    if not is_self_profile:
+        sender_profile = MatrimonialProfile.objects.get(email=request.user.email)
+        sender_has_sent_interest = receiver_profile.received_interests.filter(sender=sender_profile).exists()
+
+        connection_request_accepted = check_connection_acceptance(sender_profile, receiver_profile)
+
+    context = {
+        'receiver_profile': receiver_profile,
+        'is_self_profile': is_self_profile,
+        'sender_has_sent_interest': sender_has_sent_interest,
+        'connection_request_accepted': connection_request_accepted, 
+    }
+
+    return render(request, 'profile_view.html', context)
+
+# from .forms import ViewRequestForm
+# from .models import ViewRequest
+
+def profile_display(request, user_id):
+    user_profile = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=user_id)
+    return render(request, 'profile_display.html', {'user_profile': user_profile})
+
+def view_profile(request, user_id):
+    user_profile = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=user_id)
+    if request.method == 'POST':
+        view_request_form = ViewRequestForm(request.POST)
+        if view_request_form.is_valid():
+            view_request = view_request_form.save(commit=False)
+            view_request.sender = request.user
+            view_request.receiver = user_profile.user
+            view_request.save()
+            # Logic for notification
+            # Redirect or render appropriate response
+    else:
+        view_request_form = ViewRequestForm()
+    return render(request, 'profile_display.html', {'user_profile': user_profile, 'view_request_form': view_request_form})
+
+def accept_reject_view_request(request, request_id):
+    view_request = ViewRequest.objects.get(id=request_id)
+    if request.method == 'POST':
+        if 'accept' in request.POST:
+            view_request.status = 'accepted'
+            # Logic to update phone number visibility
+            view_request.save()
+            # Redirect or render appropriate response
+        elif 'reject' in request.POST:
+            view_request.status = 'rejected'
+            view_request.save()
+            # Redirect or render appropriate response
+    return render(request, 'view_request.html', {'view_request': view_request})
+
+def profile_detail1(request, user_id):
+    user_profile = MatrimonialProfile.objects.exclude(email=request.user.email).get(id=user_id)
+    return render(request, 'profile_detail1.html', {'user_profile': user_profile})

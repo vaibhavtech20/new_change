@@ -135,7 +135,9 @@ class MatrimonialProfileForm(forms.ModelForm):
     #     required=False,
     #     validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx'])]
     # )
-
+    
+class PhoneRequestForm(forms.Form):
+    message = forms.CharField(widget=forms.Textarea)
 
 # class ProfilePictureForm(forms.ModelForm):
 #     class Meta:
@@ -151,4 +153,9 @@ class MatrimonialProfileForm(forms.ModelForm):
 #         model = YourImageModel
 #         fields = ['image']
         # image = forms.ImageField(widget=forms.ClearableFileInput(attrs={"allow_multiple_selected": True}), required=False)
-    
+# from .models import ViewRequest
+
+# class ViewRequestForm(forms.ModelForm):
+#     class Meta:
+#         model = ViewRequest
+#         fields = []  # No additional fields required for the form

@@ -1,0 +1,13 @@
+<!-- profile_display.html -->
+
+<h1>{{ user_profile.name }}</h1>
+<p>Age: {{ user_profile.age }}</p>
+<p>Gender: {{ user_profile.gender }}</p>
+{% if user_profile.show_phone_number %}
+    <p>Phone Number: {{ user_profile.phone_number }}</p>
+{% endif %}
+<form method="post">
+    {% csrf_token %}
+    {{ view_request_form.as_p }}
+    <button type="submit">Send View Request</button>
+</form>
